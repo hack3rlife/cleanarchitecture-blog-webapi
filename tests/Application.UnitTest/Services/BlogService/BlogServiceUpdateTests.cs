@@ -69,7 +69,7 @@ namespace Application.UnitTest.Services.BlogService
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
 
             // Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'BlogId')", exception.Message);
+            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blog')", exception.Message);
 
         }
 
@@ -87,7 +87,7 @@ namespace Application.UnitTest.Services.BlogService
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
 
             // Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'BlogId')", exception.Message);
+            Assert.Equal("The blog name cannot be null or empty. (Parameter 'blog')", exception.Message);
 
         }
 
