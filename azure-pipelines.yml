@@ -28,7 +28,7 @@ steps:
   inputs:
     command: test
     projects: '**/*[Tt]est/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --logger trx --results-directory $(Agent.TempDirectory)'
+    arguments: '--configuration $(buildConfiguration)'
     publishTestResults: true
 - task: DotNetCoreCLI@2
   displayName: Publish
