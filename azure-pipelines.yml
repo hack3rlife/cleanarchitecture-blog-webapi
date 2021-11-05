@@ -29,3 +29,11 @@ steps:
     command: test
     projects: '**/*[Tt]est/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+- task: DotNetCoreCLI@2
+  displayName: Publish
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)'
+    zipAfterPublish: True
+
