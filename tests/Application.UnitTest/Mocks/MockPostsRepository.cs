@@ -100,7 +100,6 @@ namespace Application.UnitTest.Mocks
         }
 
         /// <summary>
-        /// Mock SetupPostio.mindbody.core.Entities.Post)"/>
         /// </summary>
         /// <param name="returnPost"></param>
         /// <returns></returns>
@@ -136,7 +135,7 @@ namespace Application.UnitTest.Mocks
         }
 
         /// <summary>
-        /// Verify that <Postmindbody.core.Entities.Post)"/> was called <paramref name="times"/>
+        /// Verify that was called <paramref name="times"/>
         /// </summary>
         /// <param name="times"></param>
         /// <returns></returns>
@@ -147,7 +146,7 @@ namespace Application.UnitTest.Mocks
         }
 
         /// <summary>
-        /// Mock Setup foPostio.mindbody.core.Entities.Post)"/>
+        /// Mock Setup"/>
         /// </summary>
         /// <returns></returns>
         public MockPostsRepository MockSetupDeleteAsync()
