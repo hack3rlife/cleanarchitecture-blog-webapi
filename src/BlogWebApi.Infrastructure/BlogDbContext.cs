@@ -58,7 +58,7 @@ namespace BlogWebApi.Infrastructure
                 {
                     CommentId = new Guid("ffe18dc4-d4b9-4504-be02-886f11af7c02"),
                     CommentName = "This is Awesome!!!",
-                    Email = "me@mindbody.io",
+                    Email = "me@hack3rlife.io",
                     PostId = new Guid("b7713508-4162-4f0b-a258-e46ae97ac40a")
                 }
             };
