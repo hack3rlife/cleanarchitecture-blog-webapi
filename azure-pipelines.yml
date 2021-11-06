@@ -14,22 +14,29 @@ variables:
 
 steps:
 - task: DotNetCoreCLI@2
-  displayName: Restore
+  displayName: Restore Packages
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
 - task: DotNetCoreCLI@2
-  displayName: Build
+  displayName: Building Solution
   inputs:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
-  displayName: Test
+  displayName: Executing Unit Testing
   inputs:
     command: test
-    projects: '**/*[Tt]est/*.csproj'
+    projects: '**/*UnitTest/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
     publishTestResults: true
+- task: DotNetCoreCLI@2
+  displayName: Executing Integration Tests
+  inputs:
+    command: test
+    projects: '**/*IntegrationTests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    publishTestResults: true    
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
