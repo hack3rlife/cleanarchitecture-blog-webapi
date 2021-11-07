@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using BlogWebApi.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BlogWebApi.Infrastructure
 {
@@ -16,60 +17,35 @@ namespace BlogWebApi.Infrastructure
         public BlogDbContext(DbContextOptions<BlogDbContext> options)
             : base(options)
         {
+        }
+
+        private readonly ILogger<BlogDbContext> _logger;
+
+        public BlogDbContext(DbContextOptions<BlogDbContext> options, ILogger<BlogDbContext> logger)
+            : base(options)
+        {
             SavedChanges += SavedChangesHandler;
             SaveChangesFailed += SaveChangesFailedHandler;
+
+            _logger = logger;
         }
 
         private void SaveChangesFailedHandler(object? sender, SaveChangesFailedEventArgs e)
         {
-            Debug.WriteLine(e.Exception);
+            _logger.LogError(e.Exception, e.ToString());
 
+            var blogDbContext = (BlogDbContext) sender;
+            _logger.LogDebug(blogDbContext?.ChangeTracker.DebugView?.LongView);
         }
 
-        public static void SavedChangesHandler(object sender, SavedChangesEventArgs e)
+        public void SavedChangesHandler(object sender, SavedChangesEventArgs e)
         {
-            Debug.WriteLine(e.EntitiesSavedCount);
-        }
+            _logger.LogDebug("Changes made {0}", e.EntitiesSavedCount);
 
-        public void Seed()
-        {
-           var blogs = new List<Blog>
-            {
-                new Blog
-                {
-                    BlogId = new Guid("c949db94-5195-498a-afbe-7a90031b3125"),
-                    BlogName = "Asp. Net Core Development & Testing"
-                }
-            };
-
-            var posts = new List<Post>
-            {
-                new Post
-                {
-                    BlogId = new Guid("c949db94-5195-498a-afbe-7a90031b3125"),
-                    PostName = "Asp. Net Core Clean Architecture Testing",
-                    PostId = new Guid("b7713508-4162-4f0b-a258-e46ae97ac40a")
-                }
-            };
-
-          var comments = new List<Comment>
-            {
-                new Comment
-                {
-                    CommentId = new Guid("ffe18dc4-d4b9-4504-be02-886f11af7c02"),
-                    CommentName = "This is Awesome!!!",
-                    Email = "me@hack3rlife.io",
-                    PostId = new Guid("b7713508-4162-4f0b-a258-e46ae97ac40a")
-                }
-            };
-
-            // Seed, if necessary
-            if (!this.Blog.Any())
-            {
-                this.Blog.AddRange(blogs);
-                this.Post.AddRange(posts);
-                this.Comment.AddRange(comments);
-            }
+            var blogDbContext = (BlogDbContext) sender;
+            _logger.LogDebug("Context Id: {0}", blogDbContext.ContextId);
+            _logger.LogDebug("Provider Name: {0}", new object[] {blogDbContext.Database.ProviderName});
+            _logger.LogDebug(blogDbContext.ChangeTracker.DebugView?.LongView);
         }
     }
 }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
 using BlogWebApi.Application;
 using BlogWebApi.Infrastructure;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace BlogWebApi.WebApi
 {
@@ -32,8 +32,8 @@ namespace BlogWebApi.WebApi
                 c.SwaggerDoc("v1",
                     new OpenApiInfo
                     {
-                        Title = "Clean Architecture Template for ASP .NET Core WebApi Projects",
-                        Description = "A simple ASP .NET Core Web API project for Development and Testing Training",
+                        Title = "BlogWebApi",
+                        Description = "ASP .NET WebAPI project sample using [Clean Architecture Template](https://github.com/hack3rlife/cleanarchitecture-webapi-template)",
                         Version = "v1",
                         Contact = new OpenApiContact
                         {
@@ -45,9 +45,8 @@ namespace BlogWebApi.WebApi
                             Name = "Microsoft Public License (MS-PL)",
                             Url = new Uri("https://opensource.org/licenses/MS-PL")
                         }
-
                     });
-
+                
                 //Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -73,7 +72,7 @@ namespace BlogWebApi.WebApi
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Clean Architecture Template V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "BlogWebAPi");
                 c.RoutePrefix = string.Empty;
                 c.ConfigObject.SupportedSubmitMethods = new List<SubmitMethod>()
                 {
@@ -83,6 +82,7 @@ namespace BlogWebApi.WebApi
                     SubmitMethod.Post,
                     SubmitMethod.Put
                 };
+                c.EnableDeepLinking();
             });
 
             if (env.IsDevelopment())
@@ -90,9 +90,8 @@ namespace BlogWebApi.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

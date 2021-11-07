@@ -95,7 +95,10 @@ namespace BlogWebApi.Application.Services
                 throw new ArgumentException($"The blog with {blog.BlogId} does not exist.", nameof(blog.BlogId));
             }
 
-            await _blogRepository.UpdateAsync(blog);
+            oldBlog.BlogName = blog.BlogName;
+            oldBlog.UpdatedBy = blog.UpdatedBy;
+
+            await _blogRepository.UpdateAsync(oldBlog);
         }
 
         public Task Delete(Guid blogId)

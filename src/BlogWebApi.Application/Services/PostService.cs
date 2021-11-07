@@ -102,7 +102,11 @@ namespace BlogWebApi.Application.Services
                 throw new ArgumentException($"The post with {post.PostId} does not exist.", nameof(post.PostId));
             }
 
-            await _postRepository.UpdateAsync(post);
+            oldPost.PostName = post.PostName;
+            oldPost.Text = post.Text;
+            oldPost.UpdatedBy = post.UpdatedBy;
+
+            await _postRepository.UpdateAsync(oldPost);
         }
 
         public Task Delete(Guid postId)
