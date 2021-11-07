@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -8,6 +7,7 @@ namespace BlogWebApi.WebApi.Controllers
     [ApiController]
     [Route("[controller]")]
     public class CleanArchitectureController : ControllerBase
+
     {
         private readonly ILogger<CleanArchitectureController> _logger;
 

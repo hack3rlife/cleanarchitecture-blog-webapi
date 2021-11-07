@@ -24,6 +24,7 @@ namespace Application.UnitTest.Services.CommentsService
         {
             // Arrange
             var newComment = CommentBuilder.Default();
+            await _mockCommentRepository.MockSetupGetByIdAsync(newComment);
             _mockCommentRepository.MockSetupUpdateAsync();
 
             // Act
