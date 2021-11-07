@@ -78,7 +78,18 @@ namespace BlogWebApi.Application.Services
 
         private async Task UpdateInternal(Comment comment)
         {
-            await _commentRepository.UpdateAsync(comment);
+            var oldComment = await _commentRepository.GetByIdAsync(comment.CommentId);
+
+            if (oldComment == null)
+            {
+                throw new ArgumentException($"The comment with {comment.CommentId} does not exist.", nameof(comment.CommentId));
+            }
+
+            oldComment.CommentName = comment.CommentName;
+            oldComment.Email = comment.Email;
+            oldComment.UpdatedBy = comment.UpdatedBy;
+
+            await _commentRepository.UpdateAsync(oldComment);
         }
 
         public Task Delete(Guid commentId)
