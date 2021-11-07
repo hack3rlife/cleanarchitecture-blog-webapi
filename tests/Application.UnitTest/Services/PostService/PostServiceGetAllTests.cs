@@ -8,6 +8,9 @@ namespace Application.UnitTest.Services.PostService
 {
     public class PostServiceGetAllTests : PostServiceBase
     {
+        public const int Skip = 0; //default pagination value
+        public const int Take = 10; //default pagination value
+
         [Fact(DisplayName = "GetAll_PostsWithoutPaginationValues_UsesDefaultValueForSkipAndTake")]
         public async Task GetAll_PostsWithoutPaginationValues_UsesDefaultValueForSkipAndTake()
         {
@@ -23,6 +26,41 @@ namespace Application.UnitTest.Services.PostService
             Assert.NotNull(posts);
 
             MockPostRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
+        }
+
+        [Fact(DisplayName = "GetAll_PostsUsingInvalidSkipValue_RespectsSkipDefaultValue")]
+        public async Task GetAll_PostsUsingInvalidSkipValue_RespectsSkipDefaultValue()
+        {
+            //Arrange
+            var returnPosts = new List<Post>();
+
+            await MockPostRepository.MockSetupListAllAsync(returnPosts);
+
+            //Act
+
+            var posts = await PostService.GetAll(-10, Take);
+
+            //Assert
+            Assert.NotNull(posts);
+
+            MockPostRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
+        }
+
+        [Fact(DisplayName = "GetAll_PostsUsingInvalidTakeValue_RespectsTakeDefaultValue")]
+        public async Task GetAll_PostsUsingInvalidTakeValue_RespectsTakeDefaultValue()
+        {
+            //Arrange
+            var returnPosts = new List<Post>();
+
+            await MockPostRepository.MockSetupListAllAsync(returnPosts);
+
+            //Act
+            var posts = await PostService.GetAll(Skip, -10);
+
+            //Assert
+            Assert.NotNull(posts);
+
+            MockPostRepository.MockVerifyListAllAsync(Skip, Take, Times.Never());
         }
 
         [Theory(DisplayName = "GetAll_PostsUsingPagination_IsCalledOnce")]
@@ -44,46 +82,6 @@ namespace Application.UnitTest.Services.PostService
             Assert.NotNull(posts);
 
             MockPostRepository.MockVerifyListAllAsync(skip, take, Times.Once());
-        }
-
-        [Fact(DisplayName = "GetAll_PostsUsingInvalidSkipValue_RespectsSkipDefaultValue")]
-        public async Task GetAll_PostsUsingInvalidSkipValue_RespectsSkipDefaultValue()
-        {
-            //Arrange
-            var returnPosts = new List<Post>();
-
-            await MockPostRepository.MockSetupListAllAsync(returnPosts);
-
-            //Act
-            const int skip = 0;
-            const int take = 2;
-
-            var posts = await PostService.GetAll(skip, take);
-
-            //Assert
-            Assert.NotNull(posts);
-
-            MockPostRepository.MockVerifyListAllAsync(Skip, take, Times.Once());
-        }
-
-        [Fact(DisplayName = "GetAll_PostsUsingInvalidTakeValue_RespectsTakeDefaultValue")]
-        public async Task GetAll_PostsUsingInvalidTakeValue_RespectsTakeDefaultValue()
-        {
-            //Arrange
-            var returnPosts = new List<Post>();
-
-            await MockPostRepository.MockSetupListAllAsync(returnPosts);
-
-            //Act
-            const int skip = 5;
-            const int take = 0;
-
-            var posts = await PostService.GetAll(skip, take);
-
-            //Assert
-            Assert.NotNull(posts);
-
-            MockPostRepository.MockVerifyListAllAsync(Skip, Take, Times.Never());
         }
     }
 }
