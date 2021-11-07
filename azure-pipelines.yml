@@ -37,6 +37,14 @@ steps:
     projects: '**/*IntegrationTests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
     publishTestResults: true    
+
+- task: DotNetCoreCLI@2
+  displayName: Executing End to End Tests
+  inputs:
+    command: test
+    projects: '**/*EndToEndTests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    publishTestResults: true    
 - task: DotNetCoreCLI@2
   displayName: Publish
   inputs:
