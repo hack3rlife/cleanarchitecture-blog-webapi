@@ -82,7 +82,7 @@ namespace BlogWebApi.Application.Services
 
             if (oldComment == null)
             {
-                throw new ArgumentNullException($"The comment with {comment.CommentId} does not exist.", nameof(comment.CommentId));
+                throw new ArgumentNullException(nameof(comment.CommentId), $"The comment with {comment.CommentId} does not exist.");
             }
 
             oldComment.CommentName = comment.CommentName;

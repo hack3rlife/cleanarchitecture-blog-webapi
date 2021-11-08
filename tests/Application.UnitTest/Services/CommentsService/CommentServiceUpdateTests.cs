@@ -44,7 +44,7 @@ namespace Application.UnitTest.Services.CommentsService
             _mockCommentRepository.MockSetupUpdateAsync();
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentException>(async ()=> await _commentService.Update(updateComment));
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async ()=> await _commentService.Update(updateComment));
 
             // Assert
             Assert.Equal($"The comment with {updateComment.CommentId} does not exist. (Parameter 'CommentId')", exception.Message);
