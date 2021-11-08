@@ -15,7 +15,7 @@ namespace BlogWebApi.Application.Services
             _postRepository = postRepository;
         }
 
-        public async Task<IEnumerable<Post>> GetAll(int skip, int take)
+        public async Task<IEnumerable<Post>> GetAll(int skip = 0, int take = 10)
         {
             return await _postRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
         }
@@ -57,7 +57,8 @@ namespace BlogWebApi.Application.Services
 
             if (post.PostName.Length > 255)
             {
-                throw new ArgumentOutOfRangeException(nameof(post.PostName), "The post name cannot be longer than 255 characters.");
+                throw new ArgumentOutOfRangeException(nameof(post.PostName),
+                    "The post name cannot be longer than 255 characters.");
             }
 
             return AddInternal(post);
@@ -87,9 +88,10 @@ namespace BlogWebApi.Application.Services
 
             if (post.PostName.Length > 255)
             {
-                throw new ArgumentOutOfRangeException(nameof(post.PostName), "The post name cannot be longer than 255 characters.");
+                throw new ArgumentOutOfRangeException(nameof(post.PostName),
+                    "The post name cannot be longer than 255 characters.");
             }
-            
+
             return UpdateInternal(post);
         }
 
