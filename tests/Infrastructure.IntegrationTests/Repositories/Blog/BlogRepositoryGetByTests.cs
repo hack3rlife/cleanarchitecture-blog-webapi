@@ -56,23 +56,29 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
             Assert.Null(blogById);
         }
 
-        [Fact(Skip = "BlogRepository_GetPostsByBlogId_Success")]
+        [Fact(DisplayName = "BlogRepository_GetPostsByBlogId_Success")]
         public async Task BlogRepository_GetPostsByBlogId_Success()
         {
             //Arrange
-            var newBlog = BlogBuilder.Default();
-            var expectedBlog = await _blogRepository.AddAsync(newBlog);
+            BlogWebApi.Domain.Blog expectedBlog = new BlogWebApi.Domain.Blog();
 
-            for (var i = 0; i < 20; i++)
+            for (int i = 0; i < 10; i++)
             {
+                var newBlog = BlogBuilder.Default();
 
-                var newPost = PostBuilder.Create()
-                    .WithPostId(Guid.NewGuid())
-                    .WithName(LoremNET.Lorem.Words(10))
-                    .WithText(LoremNET.Lorem.Sentence(100))
-                    .WithBlogId(expectedBlog.BlogId)
-                    .Build();
-                _ = await _postRepository.AddAsync(newPost);
+                expectedBlog = await _blogRepository.AddAsync(newBlog);
+
+                for (var j = 0; j < 20; j++)
+                {
+
+                    var newPost = PostBuilder.Create()
+                        .WithPostId(Guid.NewGuid())
+                        .WithName(LoremNET.Lorem.Words(10))
+                        .WithText(LoremNET.Lorem.Sentence(100))
+                        .WithBlogId(expectedBlog.BlogId)
+                        .Build();
+                    _ = await _postRepository.AddAsync(newPost);
+                }
             }
 
             //Act
@@ -84,7 +90,7 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
             Assert.True(blog.Post.Count == 10);
         }
 
-        [Fact(Skip = "BlogRepository_GetPostsByBlogIdWithPaging_ReturnsPaginatedResults")]
+        [Fact(DisplayName = "BlogRepository_GetPostsByBlogIdWithPaging_ReturnsPaginatedResults")]
         public async Task BlogRepository_GetPostsByBlogIdWithPaging_ReturnsPaginatedResults()
         {
             //Arrange
