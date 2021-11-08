@@ -14,7 +14,7 @@ namespace BlogWebApi.Application.Services
         {
             _commentRepository = commentRepository;
         }
-        public async Task<IEnumerable<Comment>> GetAll(int skip, int take)
+        public async Task<IEnumerable<Comment>> GetAll(int skip = 0, int take = 10)
         {
             return await _commentRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
         }
@@ -82,7 +82,7 @@ namespace BlogWebApi.Application.Services
 
             if (oldComment == null)
             {
-                throw new ArgumentException($"The comment with {comment.CommentId} does not exist.", nameof(comment.CommentId));
+                throw new ArgumentNullException($"The comment with {comment.CommentId} does not exist.", nameof(comment.CommentId));
             }
 
             oldComment.CommentName = comment.CommentName;
@@ -103,6 +103,11 @@ namespace BlogWebApi.Application.Services
         private async Task DeleteInternal(Guid commentId)
         {
             var comment = await _commentRepository.GetByIdAsync(commentId);
+
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(commentId), $"The comment with {commentId} does not exist.");
+            }
 
             await _commentRepository.DeleteAsync(comment);
         }
