@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Application.UnitTest.Builders;
 using Application.UnitTest.Mocks;
 using BlogWebApi.Application.Interfaces;
@@ -32,6 +33,95 @@ namespace Application.UnitTest.Services.CommentsService
 
             // Assert
             _mockCommentRepository.MockVerifyUpdateAsync(Times.Once());
+        }
+
+        [Fact(DisplayName = "Update_CommentNotExistent_ThrowsArgumentException")]
+        public async Task Update_CommentNotExistent_ThrowsArgumentException()
+        {
+            // Arrange
+            var updateComment = CommentBuilder.Default();
+            await _mockCommentRepository.MockSetupGetByIdAsync(null);
+            _mockCommentRepository.MockSetupUpdateAsync();
+
+            // Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async ()=> await _commentService.Update(updateComment));
+
+            // Assert
+            Assert.Equal($"The comment with {updateComment.CommentId} does not exist. (Parameter 'CommentId')", exception.Message);
+
+            _mockCommentRepository.MockVerifyUpdateAsync(Times.Never());
+        }
+
+        [Fact(DisplayName = "Update_NullComment_ThrowsArgumentNullException")]
+        public async Task Update_NullComment_ThrowsArgumentNullException()
+        {
+            //Arrange
+
+            //Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Update(null));
+
+            // Assert
+            Assert.Equal("The comment cannot be null. (Parameter 'comment')", exception.Message);
+        }
+
+        [Fact(DisplayName = "Update_EmptyCommentId_ThrowsArgumentNullException")]
+        public async Task Update_EmptyCommentId_ThrowsArgumentNullException()
+        {
+            //Arrange
+            var comment = CommentBuilder.Default();
+            comment.CommentId = Guid.Empty;
+
+            //Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async ()=> await _commentService.Update(comment));
+
+            // Assert
+            Assert.Equal("The commentId cannot be empty Guid. (Parameter 'comment')", exception.Message);
+        }
+
+        [Theory(DisplayName = "Update_WithEmptyOrNullName_ThrowsArgumentNullException")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task Update_WithEmptyOrNullName_ThrowsArgumentNullException(string name)
+        {
+            //Arrange
+            var comment = CommentBuilder.Default();
+            comment.CommentName = name;
+
+            //Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async ()=> await _commentService.Update(comment));
+
+            // Assert
+            Assert.Equal("The comment name cannot be null or empty. (Parameter 'comment')", exception.Message);
+        }
+
+        [Theory(DisplayName = "Update_WithEmptyOrNullEmail_ThrowsArgumentNullException")]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task Update_WithEmptyOrNullEmail_ThrowsArgumentNullException(string email)
+        {
+            //Arrange
+            var comment = CommentBuilder.Default();
+            comment.Email = email;
+
+            //Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Update(comment));
+
+            // Assert
+            Assert.Equal("The email cannot be null or empty. (Parameter 'comment')", exception.Message);
+        }
+
+        [Fact(DisplayName = "Update_EmptyPostId_ThrowsArgumentNullException")]
+        public async Task Update_EmptyPostId_ThrowsArgumentNullException()
+        {
+            //Arrange
+            var comment = CommentBuilder.Default();
+            comment.PostId = Guid.Empty;
+
+            //Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Update(comment));
+
+            // Assert
+            Assert.Equal("The postId cannot be empty Guid. (Parameter 'comment')", exception.Message);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Application.UnitTest.Builders;
 using Application.UnitTest.Mocks;
 using BlogWebApi.Application.Interfaces;
@@ -32,6 +33,33 @@ namespace Application.UnitTest.Services.CommentsService
 
             // Assert
             _mockCommentRepository.MockVerifyDeleteAsync(Times.Once());
+        }
+
+        [Fact(DisplayName = "Delete_CommentWithEmptyId_ThrowsArgumentNullException")]
+        public async Task Delete_CommentWithEmptyId_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var commentId = Guid.Empty;
+            
+            // Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Delete(commentId));
+
+            // Assert
+            Assert.Equal("The commentId cannot be empty Guid. (Parameter 'commentId')", exception.Message);
+        }
+
+        [Fact(DisplayName = "Delete_CommentDoesNotExist_ThrowsArgumentNullException")]
+        public async Task Delete_CommentDoesNotExist_ThrowsArgumentNullException()
+        {
+            // Arrange
+            var commentId = Guid.NewGuid();
+            await _mockCommentRepository.MockSetupGetByIdAsync(null);
+
+            // Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Delete(commentId));
+
+            // Assert
+            Assert.Equal($"The comment with {commentId} does not exist. (Parameter 'commentId')", exception.Message);
         }
     }
 }
