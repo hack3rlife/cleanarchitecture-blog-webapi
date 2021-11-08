@@ -60,7 +60,7 @@ namespace Application.UnitTest.Services.PostService
             //Assert
             Assert.NotNull(posts);
 
-            MockPostRepository.MockVerifyListAllAsync(Skip, Take, Times.Never());
+            MockPostRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
         }
 
         [Theory(DisplayName = "GetAll_PostsUsingPagination_IsCalledOnce")]
