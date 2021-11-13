@@ -1,4 +1,5 @@
 ﻿using System;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using LoremNET;
 
@@ -6,11 +7,11 @@ namespace Application.UnitTest.Builders
 {
     public class BlogBuilder
     {
-        private readonly Blog _blog;
+        private readonly BlogAddRequestDto _blog;
 
         private BlogBuilder()
         {
-            _blog = new Blog();
+            _blog = new BlogAddRequestDto();
         }
 
         public static BlogBuilder Create()
@@ -18,60 +19,13 @@ namespace Application.UnitTest.Builders
             return new BlogBuilder();
         }
 
-        public BlogBuilder WithId(Guid guid)
+        public static BlogUpdateRequestDto DefaultForBlogUpdateRequestDto()
         {
-            _blog.BlogId = guid;
-            return this;
-        }
-
-        public BlogBuilder WithEmptyBlogId()
-        {
-            _blog.BlogId = Guid.Empty;
-            return this;
-        }
-
-        public BlogBuilder WithName(string name)
-        {
-            _blog.BlogName = name;
-            return this;
-        }
-
-        public BlogBuilder WithEmptyName()
-        {
-            _blog.BlogName = string.Empty;
-            return this;
-        }
-
-        public BlogBuilder WithPost(Post post)
-        {
-            this._blog.Post.Add(post);
-            return this;
-        }
-
-        public BlogBuilder WithPosts(int n)
-        {
-            for (var i = 0; i < n; i++)
+            return new BlogUpdateRequestDto
             {
-                var post =
-                    new Post
-                    {
-
-                        PostId = Guid.NewGuid(),
-                        PostName = "Blog Post",
-                        BlogId = _blog.BlogId
-
-                    };
-
-                this._blog.Post.Add(post);
-
-            }
-
-            return this;
-        }
-
-        public Blog Build()
-        {
-            return _blog;
+                BlogName = Lorem.Words(10),
+                BlogId = Guid.NewGuid()
+            };
         }
 
         public static Blog Default()

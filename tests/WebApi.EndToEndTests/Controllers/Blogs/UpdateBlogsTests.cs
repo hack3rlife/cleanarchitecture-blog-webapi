@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using BlogWebApi.WebApi;
 using FluentAssertions;
@@ -34,7 +35,7 @@ namespace WebApi.EndToEndTests.Controllers.Blogs
             HttpContent postHttpContent = new StringContent(JsonConvert.SerializeObject(newBlog), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("/api/blogs/", postHttpContent);
             var responseContent = await response.Content.ReadAsStringAsync();
-            var blog = JsonConvert.DeserializeObject<Blog>(responseContent);
+            var blog = JsonConvert.DeserializeObject<BlogDetailsResponseDto>(responseContent);
 
             blog.BlogName = "Updated Blog";
 
@@ -43,7 +44,7 @@ namespace WebApi.EndToEndTests.Controllers.Blogs
             // Act
             var responseMessage = await _client.PutAsync("/api/blogs/", putHttpContent);
             var content = await responseMessage.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<Blog>(content);
+            var result = JsonConvert.DeserializeObject<BlogDetailsResponseDto>(content);
 
             // Assert
             result.Should().BeNull();

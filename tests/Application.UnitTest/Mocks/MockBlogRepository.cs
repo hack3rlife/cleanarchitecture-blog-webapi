@@ -134,9 +134,9 @@ namespace Application.UnitTest.Mocks
         /// <param name="newBlog"></param>
         /// <param name="times"></param>
         /// <returns></returns>
-        public MockBlogRepository MockVerifyAddAsync(Blog newBlog, Times times)
+        public MockBlogRepository MockVerifyAddAsync(Times times)
         {
-            Verify(mock => mock.AddAsync(newBlog), times);
+            Verify(mock => mock.AddAsync(It.IsAny<Blog>()), times);
             return this;
         }
 

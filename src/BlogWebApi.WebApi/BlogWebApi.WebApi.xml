@@ -32,20 +32,20 @@
             <response code="404">When the provided <see cref="T:System.Guid"/> does not exist or is not related any <see cref="T:BlogWebApi.Domain.Blog"/> in the database.</response>
             <returns></returns>
         </member>
-        <member name="M:BlogWebApi.WebApi.Controllers.BlogsController.Add(BlogWebApi.Domain.Blog)">
+        <member name="M:BlogWebApi.WebApi.Controllers.BlogsController.Add(BlogWebApi.Application.Dto.BlogAddRequestDto)">
             <summary>
             Adds a new blog
             </summary>
-            <param name="blogRequest"></param>
+            <param name="blogAddRequestDto"></param>
             <response code="201">When the blog is added successfully.</response>
             <response code="400">When there is an error during the execution of the request.</response>
             <returns></returns>
         </member>
-        <member name="M:BlogWebApi.WebApi.Controllers.BlogsController.Put(BlogWebApi.Domain.Blog)">
+        <member name="M:BlogWebApi.WebApi.Controllers.BlogsController.Put(BlogWebApi.Application.Dto.BlogUpdateRequestDto)">
             <summary>
             Updates an existing blog
             </summary>
-            <param name="blog"></param>
+            <param name="blogUpdateRequestDto"></param>
             <response code="204">When the blog is updated successfully.</response>
             <response code="400">When there is an error during the execution of the request.</response>
             <returns></returns>

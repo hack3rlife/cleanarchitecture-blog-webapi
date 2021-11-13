@@ -29,8 +29,12 @@ namespace Application.UnitTest.Services.BlogService
             // Arrange
             MockBlogRepository.MockSetupDeleteAsync();
 
-            //Act && Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.Delete(Guid.Empty));
+            // Act
+           var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.Delete(Guid.Empty));
+
+            // Assert
+            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blogId')", exception.Message);
+
             MockBlogRepository.MockVerifyDeleteAsync(Times.Never());
         }
 
@@ -41,10 +45,9 @@ namespace Application.UnitTest.Services.BlogService
             var blogId = Guid.NewGuid();
 
             // Act
-            async Task Act() => await BlogService.Delete(blogId);
+            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await BlogService.Delete(blogId));
 
             // Assert
-            var exception = await Assert.ThrowsAsync<ArgumentException>(Act);
             Assert.Equal($"The blogId {blogId} does not exist. (Parameter 'blogId')", exception.Message);
 
             MockBlogRepository.MockVerifyDeleteAsync(Times.Never());
