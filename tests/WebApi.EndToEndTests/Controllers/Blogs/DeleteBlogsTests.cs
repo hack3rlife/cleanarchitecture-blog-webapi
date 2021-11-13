@@ -1,13 +1,13 @@
-﻿using System;
+﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Domain;
+using BlogWebApi.WebApi;
+using FluentAssertions;
+using Newtonsoft.Json;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using BlogWebApi.Domain;
-using BlogWebApi.WebApi;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace WebApi.EndToEndTests.Controllers.Blogs
@@ -41,7 +41,7 @@ namespace WebApi.EndToEndTests.Controllers.Blogs
 
             // Act
             var responseMessage = await _client.DeleteAsync($"/api/blogs/{blog.BlogId}");
-            var result = JsonConvert.DeserializeObject<Blog>(await responseMessage.Content.ReadAsStringAsync());
+            var result = JsonConvert.DeserializeObject<BlogDetailsResponseDto>(await responseMessage.Content.ReadAsStringAsync());
 
             // Assert
             result.Should().BeNull();

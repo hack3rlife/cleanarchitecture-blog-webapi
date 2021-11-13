@@ -22,6 +22,7 @@ namespace Application.UnitTest.Services.BlogService
 
             //Assert
             Assert.NotNull(blogs);
+
             MockBlogRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
         }
 

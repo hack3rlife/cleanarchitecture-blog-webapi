@@ -1,8 +1,10 @@
-﻿using System;
+﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Application.Mappers;
+using BlogWebApi.Domain;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
 
 namespace BlogWebApi.Application.Services
 {
@@ -15,25 +17,30 @@ namespace BlogWebApi.Application.Services
             _blogRepository = blogRepository;
         }
 
-        public async Task<IEnumerable<Blog>> GetAll(int skip = 0, int take = 10)
+        public async Task<IEnumerable<BlogDetailsResponseDto>> GetAll(int skip = 0, int take = 10)
         {
-            return await _blogRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+            var blogs = await _blogRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+
+            return BlogMapper.ToBlogCollectionResponse(blogs);
+            
         }
 
-        public Task<Blog> GetBy(Guid blogId)
+        public Task<BlogByIdResponseDto> GetBy(Guid blogId)
         {
             if (blogId == Guid.Empty)
                 throw new ArgumentNullException(nameof(blogId), "The blogId cannot be empty Guid.");
            
-            return GetByInternal(blogId);
+            return  GetByInternal(blogId);
         }
 
-        private async Task<Blog> GetByInternal(Guid blogId)
+        private async Task<BlogByIdResponseDto> GetByInternal(Guid blogId)
         {
-            return await _blogRepository.GetByIdAsync(blogId);
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+
+            return BlogMapper.ToBlogByIdResponseDto(blog);
         }
 
-        public Task<Blog> GetPostsBy(Guid blogId, int skip = 0, int take = 10)
+        public Task<BlogDetailsResponseDto> GetPostsBy(Guid blogId, int skip = 0, int take = 10)
         {
             if (blogId == Guid.Empty)
                 throw new ArgumentNullException(nameof(blogId), "The blogId cannot be empty Guid.");
@@ -41,33 +48,41 @@ namespace BlogWebApi.Application.Services
             return GetPostsByInternal(blogId, skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
         }
 
-        private async Task<Blog> GetPostsByInternal(Guid blogId, int skip, int take)
+        private async Task<BlogDetailsResponseDto> GetPostsByInternal(Guid blogId, int skip, int take)
         {
-            return await _blogRepository.GetByIdWithPostsAsync(blogId, skip, take);
+            var blog = await _blogRepository.GetByIdWithPostsAsync(blogId, skip, take);
+
+            return BlogMapper.ToBlogResponse(blog);
         }
 
-        public Task<Blog> Add(Blog blog)
+        public Task<BlogDetailsResponseDto> Add(BlogAddRequestDto blogAddRequestDto)
         {
-            if (blog == null)
-                throw new ArgumentNullException(nameof(blog));
+            if (blogAddRequestDto == null)
+                throw new ArgumentNullException(nameof(blogAddRequestDto));
 
-            if (string.IsNullOrEmpty(blog.BlogName) || string.IsNullOrWhiteSpace(blog.BlogName))
-                throw new ArgumentNullException(nameof(blog), "The blog name cannot be null or empty.");
+            if (string.IsNullOrEmpty(blogAddRequestDto.BlogName) ||
+                string.IsNullOrWhiteSpace(blogAddRequestDto.BlogName))
+                throw new ArgumentNullException(nameof(blogAddRequestDto), "The blog name cannot be null or empty.");
 
-            if (blog.BlogName.Length > 255)
+            if (blogAddRequestDto.BlogName.Length > 255)
             {
-                throw new ArgumentOutOfRangeException(nameof(blog.BlogName), "The blog name cannot be longer than 255 characters.");
+                throw new ArgumentOutOfRangeException(nameof(blogAddRequestDto.BlogName),
+                    "The blog name cannot be longer than 255 characters.");
             }
+
+            var blog = BlogMapper.FromBlogAddRequestDto(blogAddRequestDto);
 
             return AddInternal(blog);
         }
 
-        public async Task<Blog> AddInternal(Blog blog)
+        public async Task<BlogDetailsResponseDto> AddInternal(Blog blog)
         {
-            return await _blogRepository.AddAsync(blog);
+            var newPost = await _blogRepository.AddAsync(blog);
+
+            return BlogMapper.ToBlogResponse(newPost);
         }
 
-        public Task Update(Blog blog)
+        public Task Update(BlogUpdateRequestDto blog)
         {
             if (blog == null)
                 throw new ArgumentNullException(nameof(blog));
@@ -86,7 +101,7 @@ namespace BlogWebApi.Application.Services
             return UpdateInternal(blog);
         }
 
-        private async Task UpdateInternal(Blog blog)
+        private async Task UpdateInternal(BlogUpdateRequestDto blog)
         {
             var oldBlog = await _blogRepository.GetByIdAsync(blog.BlogId);
 
@@ -104,7 +119,7 @@ namespace BlogWebApi.Application.Services
         public Task Delete(Guid blogId)
         {
             if (blogId == Guid.Empty)
-                throw new ArgumentNullException(nameof(blogId), "The blogId cannot be empty Guid");
+                throw new ArgumentNullException(nameof(blogId), "The blogId cannot be empty Guid.");
 
             return DeleteInternal(blogId);
         }
