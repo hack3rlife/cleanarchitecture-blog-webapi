@@ -1,6 +1,6 @@
-﻿using System;
+﻿using BlogWebApi.Domain;
+using System;
 using System.Threading.Tasks;
-using BlogWebApi.Domain;
 
 namespace BlogWebApi.Application.Interfaces
 {

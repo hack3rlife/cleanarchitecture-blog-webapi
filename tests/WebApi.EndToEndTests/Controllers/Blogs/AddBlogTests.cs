@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using BlogWebApi.WebApi;
 using FluentAssertions;
@@ -37,10 +38,10 @@ namespace WebApi.EndToEndTests.Controllers.Blogs
             var responseMessage = await _client.PostAsync("/api/blogs/", httpContent);
             var content = await responseMessage.Content.ReadAsStringAsync();
 
-            var blog = JsonConvert.DeserializeObject<Blog>(content);
+            var blog = JsonConvert.DeserializeObject<BlogDetailsResponseDto>(content);
 
             // Assert
-            blog.Should().BeOfType<Blog>();
+            blog.Should().BeOfType<BlogDetailsResponseDto>();
             responseMessage.StatusCode.Should().Be(HttpStatusCode.Created);
         }
     }

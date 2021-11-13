@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using BlogWebApi.WebApi;
 using FluentAssertions;
@@ -31,10 +32,9 @@ namespace WebApi.EndToEndTests.Controllers.Blogs
             var responseMessage = await _client.GetAsync("/api/blogs/");
             var content = await responseMessage.Content.ReadAsStringAsync();
 
-            var blogs = JsonConvert.DeserializeObject<List<Blog>>(content);
+            var blogs = JsonConvert.DeserializeObject<List<BlogDetailsResponseDto>>(content);
 
             // Assert
-            blogs.Should().BeOfType<List<Blog>>();
             responseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }

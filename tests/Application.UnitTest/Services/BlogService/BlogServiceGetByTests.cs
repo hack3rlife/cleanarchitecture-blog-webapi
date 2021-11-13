@@ -1,7 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using Application.UnitTest.Builders;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services.BlogService
@@ -20,7 +20,9 @@ namespace Application.UnitTest.Services.BlogService
             var actualBlog = await BlogService.GetBy(expectedBlog.BlogId);
 
             //Assert
-            Assert.Equal(expectedBlog, actualBlog);
+            Assert.Equal(expectedBlog.BlogId, actualBlog.BlogId);
+            Assert.Equal(expectedBlog.BlogName, actualBlog.BlogName);
+            
             MockBlogRepository.MockVerifyGetByIdAsync(expectedBlog, Times.Once());
         }
 
@@ -28,25 +30,28 @@ namespace Application.UnitTest.Services.BlogService
         public async Task GetBy_EmptyGuid_ThrowsArgumentNullException()
         {
             //Arrange
-            var expectedBlog = BlogBuilder
-                .Create()
-                .WithEmptyBlogId()
-                .Build();
+            var blogId = Guid.Empty;
 
-            //Act && Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.GetBy(expectedBlog.BlogId));
+            //Act
+           var exception =  await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.GetBy(blogId));
 
-            MockBlogRepository.MockVerifyGetByIdWithPostsAsync(expectedBlog.BlogId, 0, 10, Times.Never());
+            //Assert
+            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blogId')", exception.Message);
+
+            MockBlogRepository.MockVerifyGetByIdWithPostsAsync(blogId, 0, 10, Times.Never());
         }
 
-        [Fact(DisplayName = "GetBy_EmptyGuid_ThrowsArgumentNullException")]
+        [Fact(DisplayName = "GetBy_PostIdWithEmptyBlogId_ThrowsArgumentNullException")]
         public async Task GetBy_PostIdWithEmptyBlogId_ThrowsArgumentNullException()
         {
             //Arrange
             var blogId = Guid.Empty;
 
-            //Act && Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.GetPostsBy(blogId));
+            //Act
+            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.GetPostsBy(blogId));
+
+            //Assert
+            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blogId')", exception.Message);
 
             MockBlogRepository.MockVerifyGetByIdWithPostsAsync(blogId, 0, 10, Times.Never());
         }
@@ -63,7 +68,9 @@ namespace Application.UnitTest.Services.BlogService
             var actualBlog = await BlogService.GetPostsBy(expectedBlog.BlogId);
 
             //Assert
-            Assert.Equal(expectedBlog, actualBlog);
+            Assert.Equal(expectedBlog.BlogId, actualBlog.BlogId);
+            Assert.Equal(expectedBlog.BlogName, actualBlog.BlogName);
+
             MockBlogRepository.MockVerifyGetByIdWithPostsAsync(expectedBlog.BlogId, Times.Once());
         }
 
@@ -76,11 +83,13 @@ namespace Application.UnitTest.Services.BlogService
             await MockBlogRepository.MockSetupGetByIdWithPostsAsync(expectedBlog.BlogId, expectedBlog);
 
             //Act
-            var actualBlog = await BlogService.GetPostsBy(expectedBlog.BlogId, -1, 2);
+            var actualBlog = await BlogService.GetPostsBy(expectedBlog.BlogId);
 
             //Assert
-            Assert.Equal(expectedBlog, actualBlog);
-            MockBlogRepository.MockVerifyGetByIdWithPostsAsync(expectedBlog.BlogId, 0, 2, Times.Once());
+            Assert.Equal(expectedBlog.BlogId, actualBlog.BlogId);
+            Assert.Equal(expectedBlog.BlogName, actualBlog.BlogName);
+
+            MockBlogRepository.MockVerifyGetByIdWithPostsAsync(expectedBlog.BlogId, 0, 10, Times.Once());
         }
 
         [Fact(DisplayName = "GetBy_BlogIdWithPostsUsingInvalidTakeValue_UsesDefaultValueForTake")]
@@ -88,15 +97,16 @@ namespace Application.UnitTest.Services.BlogService
         {
             //Arrange
             var expectedBlog = BlogBuilder.Default();
-
             await MockBlogRepository.MockSetupGetByIdWithPostsAsync(expectedBlog.BlogId, expectedBlog);
 
             //Act
-            var actualBlog = await BlogService.GetPostsBy(expectedBlog.BlogId, 1, -1);
+            var actualBlog = await BlogService.GetPostsBy(expectedBlog.BlogId);
 
             //Assert
-            Assert.Equal(expectedBlog, actualBlog);
-            MockBlogRepository.MockVerifyGetByIdWithPostsAsync(expectedBlog.BlogId, 1, 10, Times.Once());
+            Assert.Equal(expectedBlog.BlogId, actualBlog.BlogId);
+            Assert.Equal(expectedBlog.BlogName, actualBlog.BlogName);
+
+            MockBlogRepository.MockVerifyGetByIdWithPostsAsync(expectedBlog.BlogId, 0, 10, Times.Once());
         }
 
         [Theory(DisplayName = "GetBy_BlogIdWithPosts_IsCalledOnce")]
@@ -114,7 +124,9 @@ namespace Application.UnitTest.Services.BlogService
             var actualBlog = await BlogService.GetPostsBy(expectedBlog.BlogId, skip, take);
 
             //Assert
-            Assert.Equal(expectedBlog, actualBlog);
+            Assert.Equal(expectedBlog.BlogId, actualBlog.BlogId);
+            Assert.Equal(expectedBlog.BlogName, actualBlog.BlogName);
+
             MockBlogRepository.MockVerifyGetByIdWithPostsAsync(expectedBlog.BlogId, skip, take, Times.Once());
         }
     }

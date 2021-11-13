@@ -1,11 +1,11 @@
+using BlogWebApi.Application.Dto;
+using BlogWebApi.WebApi;
+using FluentAssertions;
+using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BlogWebApi.Domain;
-using BlogWebApi.WebApi;
-using FluentAssertions;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace WebApi.EndToEndTests.Controllers.Blogs
@@ -32,9 +32,9 @@ namespace WebApi.EndToEndTests.Controllers.Blogs
             var responseMessage = await _client.GetAsync($"/api/blogs/{blogId}");
             var content = await responseMessage.Content.ReadAsStringAsync();
 
-            var blog = JsonConvert.DeserializeObject<Blog>(content);
+            var blog = JsonConvert.DeserializeObject<BlogDetailsResponseDto>(content);
 
-            blog.Should().BeOfType<Blog>();
+            blog.Should().BeOfType<BlogDetailsResponseDto>();
             responseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 

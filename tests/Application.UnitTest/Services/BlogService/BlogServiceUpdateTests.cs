@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Application.UnitTest.Builders;
+using BlogWebApi.Application.Dto;
+using BlogWebApi.Domain;
 using LoremNET;
 using Moq;
 using Xunit;
@@ -18,8 +20,14 @@ namespace Application.UnitTest.Services.BlogService
             await MockBlogRepository.MockSetupGetByIdAsync(updateBlog);
             MockBlogRepository.MockSetupUpdateAsync();
 
+            var updateRequestDto = new BlogUpdateRequestDto()
+            {
+                BlogId = updateBlog.BlogId,
+                BlogName = updateBlog.BlogName
+            };
+
             //Act
-            await BlogService.Update(updateBlog);
+            await BlogService.Update(updateRequestDto);
 
             //Assert
             MockBlogRepository.MockVerifyUpdateAsync(Times.Once());
@@ -34,8 +42,14 @@ namespace Application.UnitTest.Services.BlogService
             await MockBlogRepository.MockSetupGetByIdAsync(null);
             MockBlogRepository.MockSetupUpdateAsync();
 
+            var updateRequestDto = new BlogUpdateRequestDto
+            {
+                BlogId = updateBlog.BlogId,
+                BlogName = updateBlog.BlogName
+            };
+
             // Act
-            async Task Act() => await BlogService.Update(updateBlog);
+            async Task Act() => await BlogService.Update(updateRequestDto);
             var exception = await Assert.ThrowsAsync<ArgumentException>(Act);
 
             // Assert
@@ -62,10 +76,20 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Update_WithEmptyBlogId_ThrowsArgumentNullException()
         {
             //Arrange
-            var blog = BlogBuilder.Create().WithEmptyBlogId().Build();
+            var updateBlog = new Blog
+            {
+                BlogId = Guid.Empty,
+                BlogName = "UpdateBlog"
+            };
+
+            var updateRequestDto = new BlogUpdateRequestDto
+            {
+                BlogId = updateBlog.BlogId,
+                BlogName = updateBlog.BlogName
+            };
 
             // Act
-            async Task Act() => await BlogService.Update(blog);
+            async Task Act() => await BlogService.Update(updateRequestDto);
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
 
             // Assert
@@ -79,7 +103,7 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Update_WithEmptyOrNullName_ThrowsArgumentNullException(string name)
         {
             //Arrange
-            var blog = BlogBuilder.Default();
+            var blog = BlogBuilder.DefaultForBlogUpdateRequestDto();
             blog.BlogName = name;
 
             // Act
@@ -95,7 +119,7 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Update_BlogWithLongBlogName_ThrowsNullArgumentException()
         {
             //Arrange
-            var blog = BlogBuilder.Default();
+            var blog = BlogBuilder.DefaultForBlogUpdateRequestDto();
             blog.BlogName = Lorem.Words(255);
 
             //Act
@@ -106,7 +130,6 @@ namespace Application.UnitTest.Services.BlogService
             Assert.Equal("The blog name cannot be longer than 255 characters. (Parameter 'BlogName')",
                 exception.Message);
 
-            MockBlogRepository.MockVerifyAddAsync(blog, Times.Never());
         }
     }
 }
