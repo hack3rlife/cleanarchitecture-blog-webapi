@@ -1,7 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Application.UnitTest.Builders;
+﻿using Application.UnitTest.Builders;
+using BlogWebApi.Application.Dto;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services.PostService
@@ -19,7 +20,8 @@ namespace Application.UnitTest.Services.PostService
             var postById = await PostService.GetBy(thePost.PostId);
 
             //Assert
-            Assert.NotNull(postById);
+            Assert.True(postById.GetType() == typeof(PostDetailsResponseDto));
+
             MockPostRepository.MockVerifyGetByIdAsync(thePost, Times.Once());
         }
 
@@ -48,10 +50,9 @@ namespace Application.UnitTest.Services.PostService
             var post = await PostService.GetCommentsBy(returnPost.PostId);
 
             //Assert 
-            Assert.NotNull(post);
+            Assert.NotNull(post); Assert.True(post.GetType() == typeof(PostDetailsResponseDto));
 
             MockPostRepository.MockVerifyGetByIdWithPostsAsync(returnPost.PostId, Skip, Take, Times.Once());
-
         }
 
         [Fact(DisplayName = "GetBy_PostIdIncludingCommentsWithInvalidSkipValue_UsesDefaultValuesForSkip")]
@@ -69,7 +70,6 @@ namespace Application.UnitTest.Services.PostService
             Assert.NotNull(post);
 
             MockPostRepository.MockVerifyGetByIdWithPostsAsync(returnPost.PostId, Skip, 5, Times.Once());
-
         }
 
         [Fact(DisplayName = "GetBy_PostIdIncludingCommentsWithInvalidTakeValue_UsesDefaultValuesForTake")]
@@ -89,7 +89,6 @@ namespace Application.UnitTest.Services.PostService
             Assert.NotNull(post);
 
             MockPostRepository.MockVerifyGetByIdWithPostsAsync(returnPost.PostId, Skip, Take, Times.Once());
-
         }
 
         [Theory(DisplayName = "GetBy_PostIdIncludingComments_IsCalledOnce")]

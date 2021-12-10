@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BlogWebApi.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
@@ -12,21 +13,21 @@ namespace BlogWebApi.WebApi
         {
             var host = CreateHostBuilder(args).Build();
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var context = services.GetRequiredService<BlogDbContext>();
+            //using (var scope = host.Services.CreateScope())
+            //{
+            //    var services = scope.ServiceProvider;
+            //    try
+            //    {
+            //        var context = services.GetRequiredService<BlogDbContext>();
 
-                    await BlogDbContextDataSeed.SeedSampleDataAsync(context);
+            //        await BlogDbContextDataSeed.SeedSampleDataAsync(context);
 
-                }
-                catch
-                {
-                    //TODO: log error
-                }
-            }
+            //    }
+            //    catch(Exception exception)
+            //    {
+            //        Console.WriteLine(exception);
+            //    }
+            //}
 
             await host.RunAsync();
         }

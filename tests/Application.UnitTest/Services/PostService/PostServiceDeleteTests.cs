@@ -36,7 +36,7 @@ namespace Application.UnitTest.Services.PostService
 
             //Assert
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
-            Assert.Equal($"The postId cannot be empty Guid. (Parameter 'postId')", exception.Message);
+            Assert.Equal("The postId cannot be empty Guid. (Parameter 'postId')", exception.Message);
 
             MockPostRepository.MockVerifyDeleteAsync(It.IsAny<Post>(), Times.Never());
         }

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Application.Mappers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
 
 namespace BlogWebApi.Application.Services
 {
@@ -15,12 +16,14 @@ namespace BlogWebApi.Application.Services
             _postRepository = postRepository;
         }
 
-        public async Task<IEnumerable<Post>> GetAll(int skip = 0, int take = 10)
+        public async Task<IEnumerable<PostResponseDto>> GetAll(int skip = 0, int take = 10)
         {
-            return await _postRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+            var posts = await _postRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+
+            return PostResponseMapper.Map(posts);
         }
 
-        public Task<Post> GetBy(Guid postId)
+        public Task<PostDetailsResponseDto> GetBy(Guid postId)
         {
             if (postId == Guid.Empty)
                 throw new ArgumentNullException(nameof(postId), "The postId cannot be empty Guid.");
@@ -28,20 +31,24 @@ namespace BlogWebApi.Application.Services
             return GetByInternal(postId);
         }
 
-        private async Task<Post> GetByInternal(Guid postId)
+        private async Task<PostDetailsResponseDto> GetByInternal(Guid postId)
         {
-            return await _postRepository.GetByIdAsync(postId);
+            var post = await _postRepository.GetByIdAsync(postId);
+
+            return PostDetailsResponseMapper.Map(post);
         }
 
-        public async Task<Post> GetCommentsBy(Guid postId, int skip, int take)
+        public async Task<PostDetailsResponseDto> GetCommentsBy(Guid postId, int skip, int take)
         {
             if (postId == Guid.Empty)
                 throw new ArgumentNullException(nameof(postId), "The postId cannot be empty Guid.");
 
-            return await _postRepository.GetByIdWithCommentsAsync(postId, skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+            var post = await _postRepository.GetByIdWithCommentsAsync(postId, skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+
+            return PostDetailsResponseMapper.Map(post);
         }
 
-        public Task<Post> Add(Post post)
+        public Task<PostResponseDto> Add(PostAddRequestDto post)
         {
             if (post == null)
                 throw new ArgumentNullException(nameof(post), "The post cannot be null.");
@@ -64,12 +71,14 @@ namespace BlogWebApi.Application.Services
             return AddInternal(post);
         }
 
-        private async Task<Post> AddInternal(Post post)
+        private async Task<PostResponseDto> AddInternal(PostAddRequestDto postAddRequestDto)
         {
-            return await _postRepository.AddAsync(post);
+            var post = PostAddRequestMapper.Map(postAddRequestDto);
+
+            return PostResponseMapper.Map(await _postRepository.AddAsync(post));
         }
 
-        public Task Update(Post post)
+        public Task Update(PostUpdateRequestDto post)
         {
             if (post == null)
                 throw new ArgumentNullException(nameof(post), "The post cannot be null.");
@@ -95,18 +104,16 @@ namespace BlogWebApi.Application.Services
             return UpdateInternal(post);
         }
 
-        private async Task UpdateInternal(Post post)
+        private async Task UpdateInternal(PostUpdateRequestDto postUpdateRequestDto)
         {
-            var oldPost = await _postRepository.GetByIdAsync(post.PostId);
+            var oldPost = await _postRepository.GetByIdAsync(postUpdateRequestDto.PostId);
 
             if (oldPost == null)
             {
-                throw new ArgumentException($"The post with {post.PostId} does not exist.", nameof(post.PostId));
+                throw new ArgumentException($"The post with {postUpdateRequestDto.PostId} does not exist.", nameof(postUpdateRequestDto.PostId));
             }
 
-            oldPost.PostName = post.PostName;
-            oldPost.Text = post.Text;
-            oldPost.UpdatedBy = post.UpdatedBy;
+            oldPost = PostUpdateRequestMapper.Map(postUpdateRequestDto);
 
             await _postRepository.UpdateAsync(oldPost);
         }

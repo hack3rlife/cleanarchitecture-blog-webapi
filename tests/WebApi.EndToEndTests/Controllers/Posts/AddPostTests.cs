@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using BlogWebApi.WebApi;
 using FluentAssertions;
@@ -29,12 +30,12 @@ namespace WebApi.EndToEndTests.Controllers.Posts
         {
             // Arrange
             var blogResponseMessage = await _client.PostAsync("/api/blogs/",
-                new StringContent(JsonConvert.SerializeObject(new Blog { BlogName = "AddBlog" }),
+                new StringContent(JsonConvert.SerializeObject(new BlogAddRequestDto { BlogName = "AddBlog" }),
                     Encoding.UTF8,
                     "application/json"));
             var blogContent = await blogResponseMessage.Content.ReadAsStringAsync();
 
-            var blog = JsonConvert.DeserializeObject<Blog>(blogContent);
+            var blog = JsonConvert.DeserializeObject<BlogByIdResponseDto>(blogContent);
 
             var newPost = new Post
             {
@@ -50,14 +51,14 @@ namespace WebApi.EndToEndTests.Controllers.Posts
                     "application/json"));
             var content = await responseMessage.Content.ReadAsStringAsync();
 
-            var post = JsonConvert.DeserializeObject<Post>(content);
+            var post = JsonConvert.DeserializeObject<PostResponseDto>(content);
 
             // Assert
-            post.Should().BeOfType<Post>();
+            post.Should().BeOfType<PostResponseDto>();
             responseMessage.StatusCode.Should().Be(HttpStatusCode.Created);
         }
 
-        [Fact(DisplayName = "AddPost_WithEmptyBlogId_ThrowsAnError", Skip = "To do")]
+        [Fact(Skip = "AddPost_WithEmptyBlogId_ThrowsAnError")]
         public async Task AddPost_WithEmptyBlogId_ThrowsAnError()
         {
             // Arrange
@@ -75,11 +76,11 @@ namespace WebApi.EndToEndTests.Controllers.Posts
                     "application/json"));
             var content = await responseMessage.Content.ReadAsStringAsync();
 
-            var post = JsonConvert.DeserializeObject<Post>(content);
+            var post = JsonConvert.DeserializeObject<PostResponseDto>(content);
 
             // Assert
             responseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            post.Should().BeOfType<Post>();
+            post.Should().BeOfType<PostResponseDto>();
 
         }
 
@@ -101,11 +102,11 @@ namespace WebApi.EndToEndTests.Controllers.Posts
                     "application/json"));
             var content = await responseMessage.Content.ReadAsStringAsync();
 
-            var post = JsonConvert.DeserializeObject<Post>(content);
+            var post = JsonConvert.DeserializeObject<PostResponseDto>(content);
 
             // Assert
             responseMessage.StatusCode.Should().Be(HttpStatusCode.BadRequest);
-            post.Should().BeOfType<Post>();
+            post.Should().BeOfType<PostResponseDto>();
         }
     }
 }
