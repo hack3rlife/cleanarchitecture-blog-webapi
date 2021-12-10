@@ -23,7 +23,13 @@ namespace WebApi.EndToEndTests
                 })
                 .ConfigureTestServices(testServices =>
                 {
-                    testServices.AddDbContext<BlogDbContext>(c => c.UseInMemoryDatabase("inmemblogdb"));
+                    testServices.AddDbContext<BlogDbContext>(options =>
+                    {
+                        options.UseInMemoryDatabase("inmemblogdb");
+                        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                        options.EnableSensitiveDataLogging();
+                        options.EnableDetailedErrors();
+                    });
 
                     //var context = Services.GetRequiredService<BlogDbContext>();
 

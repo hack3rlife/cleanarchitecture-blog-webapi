@@ -87,6 +87,21 @@ namespace BlogWebApi.WebApi
 
             if (env.IsDevelopment())
             {
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    try
+                    {
+                        var context = services.GetRequiredService<BlogDbContext>();
+
+                        BlogDbContextDataSeed.SeedSampleData(context);
+
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception);
+                    }
+                }
                 app.UseDeveloperExceptionPage();
             }
 

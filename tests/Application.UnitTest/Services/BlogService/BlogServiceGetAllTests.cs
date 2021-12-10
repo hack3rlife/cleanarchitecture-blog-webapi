@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using Moq;
 using Xunit;
@@ -21,8 +22,6 @@ namespace Application.UnitTest.Services.BlogService
             var blogs = await BlogService.GetAll();
 
             //Assert
-            Assert.NotNull(blogs);
-
             MockBlogRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
         }
 
@@ -36,7 +35,6 @@ namespace Application.UnitTest.Services.BlogService
             var blogs = await BlogService.GetAll(-10, Take);
 
             //Assert
-            Assert.NotNull(blogs);
             MockBlogRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
         }
 
@@ -50,7 +48,6 @@ namespace Application.UnitTest.Services.BlogService
             var blogs = await BlogService.GetAll(Skip, -10);
 
             //Assert
-            Assert.NotNull(blogs);
             MockBlogRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
         }
 
@@ -67,8 +64,6 @@ namespace Application.UnitTest.Services.BlogService
             var blogs = await BlogService.GetAll(skip, take);
 
             //Assert
-            Assert.NotNull(blogs);
-
             MockBlogRepository.Verify(mock => mock.ListAllAsync(skip, take), Times.Once);
         }
     }

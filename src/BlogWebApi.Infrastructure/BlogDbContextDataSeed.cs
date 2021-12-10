@@ -37,6 +37,19 @@ namespace BlogWebApi.Infrastructure
             }
         };
 
+        public static void SeedSampleData(BlogDbContext context)
+        {
+            // Seed, if necessary
+            if (!context.Blog.Any())
+            {
+                context.Blog.AddRange(Blogs);
+                context.Post.AddRange(Posts);
+                context.Comment.AddRange(Comments);
+            }
+
+            context.SaveChanges();
+        }
+
         public static async Task SeedSampleDataAsync(BlogDbContext context)
         {
             // Seed, if necessary

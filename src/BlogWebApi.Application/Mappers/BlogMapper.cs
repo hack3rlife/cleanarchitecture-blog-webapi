@@ -7,7 +7,6 @@ namespace BlogWebApi.Application.Mappers
 {
     public static class BlogMapper
     {
-
         public static Blog FromBlogAddRequestDto(BlogAddRequestDto blogAddRequestDto)
         {
             if (blogAddRequestDto == null)

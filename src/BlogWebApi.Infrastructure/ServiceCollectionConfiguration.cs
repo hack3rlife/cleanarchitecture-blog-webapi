@@ -16,13 +16,22 @@ namespace BlogWebApi.Infrastructure
 
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<BlogDbContext>(options => options.UseInMemoryDatabase(databaseName: "inmemblogdb"));
+                services.AddDbContext<BlogDbContext>( options =>
+                {
+                    options.UseInMemoryDatabase(databaseName: "inmemblogdb");
+                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                    options.EnableSensitiveDataLogging();
+                    options.EnableDetailedErrors();
+                }, ServiceLifetime.Scoped, ServiceLifetime.Scoped);
             }
             else
             {
                 var connectionString = configuration.GetConnectionString("BlogDbConnection");
 
-                services.AddDbContext<BlogDbContext>(c => c.UseSqlServer(connectionString));
+                services.AddDbContext<BlogDbContext>(options =>
+                {
+                    options.UseSqlServer(connectionString);
+                });
             }
 
             return services;

@@ -161,7 +161,7 @@
             <response code="404">When the provided <see cref="T:System.Guid"/> does not exist or is not related any <see cref="T:BlogWebApi.Domain.Blog"/> in the database.</response>
             <returns></returns>
         </member>
-        <member name="M:BlogWebApi.WebApi.Controllers.PostsController.Post(BlogWebApi.Domain.Post)">
+        <member name="M:BlogWebApi.WebApi.Controllers.PostsController.Post(BlogWebApi.Application.Dto.PostAddRequestDto)">
             <summary>
             Adds a new post
             </summary>
@@ -170,7 +170,7 @@
             <response code="400">When there is an error during the execution of the request.</response>
             <returns></returns>
         </member>
-        <member name="M:BlogWebApi.WebApi.Controllers.PostsController.Put(BlogWebApi.Domain.Post)">
+        <member name="M:BlogWebApi.WebApi.Controllers.PostsController.Put(BlogWebApi.Application.Dto.PostUpdateRequestDto)">
             <summary>
             Updates an existing post
             </summary>
