@@ -127,10 +127,9 @@ namespace Application.UnitTest.Mocks
         /// Setup the mock for <see cref="IPostRepository"/>.UpdateAsync method
         /// </summary>
         /// <returns></returns>
-        public MockPostsRepository MockSetupUpdateAsync()
+        public MockPostsRepository MockSetupUpdateAsync(Post updatedPost)
         {
-            Setup(x => x.UpdateAsync(It.IsAny<Post>()))
-                .Verifiable();
+            Setup(x => x.UpdateAsync(updatedPost)).Verifiable();
             return this;
         }
 

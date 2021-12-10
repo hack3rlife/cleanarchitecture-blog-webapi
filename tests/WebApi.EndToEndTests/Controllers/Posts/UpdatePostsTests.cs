@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using BlogWebApi.WebApi;
 using FluentAssertions;
@@ -28,14 +29,14 @@ namespace WebApi.EndToEndTests.Controllers.Posts
         {
             // Arrange
             var blogResponseMessage = await _client.PostAsync("/api/blogs/",
-                new StringContent(JsonConvert.SerializeObject(new Blog { BlogName = "Update_Post_Ok" }),
+                new StringContent(JsonConvert.SerializeObject(new BlogAddRequestDto {BlogName = "Update_Post_Ok"}),
                     Encoding.UTF8,
                     "application/json"));
             var blogContent = await blogResponseMessage.Content.ReadAsStringAsync();
 
-            var blog = JsonConvert.DeserializeObject<Blog>(blogContent);
+            var blog = JsonConvert.DeserializeObject<BlogByIdResponseDto>(blogContent);
 
-            var newPost = new Post
+            var newPost = new PostAddRequestDto
             {
                 BlogId = blog.BlogId,
                 PostName = "Update_Post",
@@ -47,17 +48,25 @@ namespace WebApi.EndToEndTests.Controllers.Posts
                     Encoding.UTF8,
                     "application/json"));
 
-            var post = JsonConvert.DeserializeObject<Post>(await postResponseMessage.Content.ReadAsStringAsync());
-            post.Text = Lorem.Paragraph(50, 100);
-            
-            // Act
-           var responseMessage = await _client.PutAsync("/api/posts/",
-               new StringContent(JsonConvert.SerializeObject(post),
-                   Encoding.UTF8,
-                   "application/json"));
+            var post = JsonConvert.DeserializeObject<PostResponseDto>(await postResponseMessage.Content.ReadAsStringAsync());
 
-           var content = await responseMessage.Content.ReadAsStringAsync();
-           var result = JsonConvert.DeserializeObject<Post>(content);
+            var updateDto = new PostUpdateRequestDto
+            {
+                PostId = post.PostId,
+                BlogId = post.BlogId,
+                PostName = post.PostName,
+                Text = Lorem.Paragraph(50, 100),
+                UpdatedBy = "hack3rlife"
+            };
+
+            // Act
+            var responseMessage = await _client.PutAsync("/api/posts/",
+                new StringContent(JsonConvert.SerializeObject(updateDto),
+                    Encoding.UTF8,
+                    "application/json"));
+
+            var content = await responseMessage.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<PostResponseDto>(content);
 
             // Assert
             result.Should().BeNull();

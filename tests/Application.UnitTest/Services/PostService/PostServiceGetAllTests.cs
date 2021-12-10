@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using Moq;
 using Xunit;
@@ -23,8 +24,8 @@ namespace Application.UnitTest.Services.PostService
             var posts = await PostService.GetAll();
 
             //Assert
-            Assert.NotNull(posts);
-
+            Assert.True(posts.GetType() == typeof(List<PostResponseDto>));
+            
             MockPostRepository.MockVerifyListAllAsync(Skip, Take, Times.Once());
         }
 
@@ -37,7 +38,6 @@ namespace Application.UnitTest.Services.PostService
             await MockPostRepository.MockSetupListAllAsync(returnPosts);
 
             //Act
-
             var posts = await PostService.GetAll(-10, Take);
 
             //Assert
@@ -75,7 +75,6 @@ namespace Application.UnitTest.Services.PostService
             await MockPostRepository.MockSetupListAllAsync(returnPosts);
 
             //Act
-
             var posts = await PostService.GetAll(skip, take);
 
             //Assert

@@ -1,17 +1,17 @@
-﻿using System;
+﻿using BlogWebApi.Application.Dto;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlogWebApi.Domain;
 
 namespace BlogWebApi.Application.Interfaces
 {
     public interface IPostService
     {
-        Task<IEnumerable<Post>> GetAll(int skip = 0, int take = 10);
-        Task<Post> GetBy(Guid postId);
-        Task<Post> GetCommentsBy(Guid postId, int skip = 0, int take = 10);
-        Task<Post> Add(Post post);
-        Task Update(Post post);
+        Task<IEnumerable<PostResponseDto>> GetAll(int skip = 0, int take = 10);
+        Task<PostDetailsResponseDto> GetBy(Guid postId);
+        Task<PostDetailsResponseDto> GetCommentsBy(Guid postId, int skip = 0, int take = 10);
+        Task<PostResponseDto> Add(PostAddRequestDto post);
+        Task Update(PostUpdateRequestDto post);
         Task Delete(Guid postId);
     }
 }
