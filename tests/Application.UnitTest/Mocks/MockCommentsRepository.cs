@@ -87,12 +87,11 @@ namespace Application.UnitTest.Mocks
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="newComment"></param>
         /// <param name="times"></param>
         /// <returns></returns>
-        public MockCommentsRepository MockVerifyAddAsync(Comment newComment, Times times)
+        public MockCommentsRepository MockVerifyAddAsync(Times times)
         {
-            Verify(mock => mock.AddAsync(newComment), times);
+            Verify(mock => mock.AddAsync(It.IsAny<Comment>()), times);
             return this;
         }
 

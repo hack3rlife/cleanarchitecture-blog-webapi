@@ -93,7 +93,7 @@
             <response code="400">When there is an error during the execution of the request.</response>
             <response code="404">When the provided <see cref="T:System.Guid"/> does not exist or is not related any <see cref="T:BlogWebApi.Domain.Comment"/> in the database.</response>
         </member>
-        <member name="M:BlogWebApi.WebApi.Controllers.CommentsController.Post(BlogWebApi.Domain.Comment)">
+        <member name="M:BlogWebApi.WebApi.Controllers.CommentsController.Post(BlogWebApi.Application.Dto.CommentAddRequestDto)">
             <summary>
             Adds a new comment
             </summary>
@@ -102,7 +102,7 @@
             <response code="400">When there is an error during the execution of the request.</response>
             <returns></returns>
         </member>
-        <member name="M:BlogWebApi.WebApi.Controllers.CommentsController.Put(BlogWebApi.Domain.Comment)">
+        <member name="M:BlogWebApi.WebApi.Controllers.CommentsController.Put(BlogWebApi.Application.Dto.CommentUpdateRequestDto)">
             <summary>
             Updates an existing comment
             </summary>
