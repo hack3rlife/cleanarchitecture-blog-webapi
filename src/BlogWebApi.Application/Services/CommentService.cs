@@ -1,8 +1,9 @@
-﻿using System;
+﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Application.Mappers;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
 
 namespace BlogWebApi.Application.Services
 {
@@ -14,12 +15,14 @@ namespace BlogWebApi.Application.Services
         {
             _commentRepository = commentRepository;
         }
-        public async Task<IEnumerable<Comment>> GetAll(int skip = 0, int take = 10)
+        public async Task<IEnumerable<CommentResponseDto>> GetAll(int skip = 0, int take = 10)
         {
-            return await _commentRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+            var comments = await _commentRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
+
+            return CommentResponseMapper.Map(comments);
         }
 
-        public Task<Comment> GetBy(Guid commentId)
+        public Task<CommentDetailsResponseDto> GetBy(Guid commentId)
         {
             if (commentId == Guid.Empty)
                 throw new ArgumentNullException(nameof(commentId), "The commentId cannot be empty Guid.");
@@ -27,56 +30,60 @@ namespace BlogWebApi.Application.Services
             return GetByInternal(commentId);
         }
 
-        private async Task<Comment> GetByInternal(Guid commentId)
+        private async Task<CommentDetailsResponseDto> GetByInternal(Guid commentId)
         {
-            return await _commentRepository.GetByIdAsync(commentId);
+            var comment = await _commentRepository.GetByIdAsync(commentId);
+
+            return CommentDetailsResponseMapper.Map(comment);
         }
 
-        public Task<Comment> Add(Comment comment)
+        public Task<CommentResponseDto> Add(CommentAddRequestDto commentAddRequestDto)
         {
-            if (comment == null)
-                throw new ArgumentNullException(nameof(comment), "The comment cannot be null.");
+            if (commentAddRequestDto == null)
+                throw new ArgumentNullException(nameof(commentAddRequestDto), "The comment cannot be null.");
 
-            if (string.IsNullOrEmpty(comment.CommentName) || string.IsNullOrWhiteSpace(comment.CommentName))
-                throw new ArgumentNullException(nameof(comment), "The comment name cannot be null or empty.");
+            if (string.IsNullOrEmpty(commentAddRequestDto.CommentName) || string.IsNullOrWhiteSpace(commentAddRequestDto.CommentName))
+                throw new ArgumentNullException(nameof(commentAddRequestDto), "The comment name cannot be null or empty.");
             
             //TODO: Validate email is valid
-            if (string.IsNullOrEmpty(comment.Email) || string.IsNullOrWhiteSpace(comment.Email))
-                throw new ArgumentNullException(nameof(comment), "The email cannot be null or empty.");
+            if (string.IsNullOrEmpty(commentAddRequestDto.Email) || string.IsNullOrWhiteSpace(commentAddRequestDto.Email))
+                throw new ArgumentNullException(nameof(commentAddRequestDto), "The email cannot be null or empty.");
             
-            if (comment.PostId == Guid.Empty)
-                throw new ArgumentNullException(nameof(comment), "The postId cannot be empty Guid.");
+            if (commentAddRequestDto.PostId == Guid.Empty)
+                throw new ArgumentNullException(nameof(commentAddRequestDto), "The postId cannot be empty Guid.");
 
-            return AddInternal(comment);
+            return AddInternal(commentAddRequestDto);
         }
 
-        private async Task<Comment> AddInternal(Comment comment)
+        private async Task<CommentResponseDto> AddInternal(CommentAddRequestDto commentAddRequestDto)
         {
-            return await _commentRepository.AddAsync(comment);
+            var newComment = await _commentRepository.AddAsync(CommentMapper.Map(commentAddRequestDto));
+
+            return CommentResponseMapper.Map(newComment);
         }
 
-        public Task Update(Comment comment)
+        public Task Update(CommentUpdateRequestDto commentUpdateRequestDto)
         {
-            if(comment == null)
-                throw new ArgumentNullException(nameof(comment), "The comment cannot be null.");
+            if(commentUpdateRequestDto == null)
+                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The comment cannot be null.");
 
-            if (comment.CommentId == Guid.Empty)
-                throw new ArgumentNullException(nameof(comment), "The commentId cannot be empty Guid.");
+            if (commentUpdateRequestDto.CommentId == Guid.Empty)
+                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The commentId cannot be empty Guid.");
 
-            if (string.IsNullOrEmpty(comment.CommentName) || string.IsNullOrWhiteSpace(comment.CommentName))
-                throw new ArgumentNullException(nameof(comment), "The comment name cannot be null or empty.");
+            if (string.IsNullOrEmpty(commentUpdateRequestDto.CommentName) || string.IsNullOrWhiteSpace(commentUpdateRequestDto.CommentName))
+                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The comment name cannot be null or empty.");
 
             //TODO: Validate email is valid
-            if (string.IsNullOrEmpty(comment.Email) || string.IsNullOrWhiteSpace(comment.Email))
-                throw new ArgumentNullException(nameof(comment), "The email cannot be null or empty.");
+            if (string.IsNullOrEmpty(commentUpdateRequestDto.Email) || string.IsNullOrWhiteSpace(commentUpdateRequestDto.Email))
+                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The email cannot be null or empty.");
 
-            if (comment.PostId == Guid.Empty)
-                throw new ArgumentNullException(nameof(comment), "The postId cannot be empty Guid.");
+            if (commentUpdateRequestDto.PostId == Guid.Empty)
+                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The postId cannot be empty Guid.");
 
-            return UpdateInternal(comment);
+            return UpdateInternal(commentUpdateRequestDto);
         }
 
-        private async Task UpdateInternal(Comment comment)
+        private async Task UpdateInternal(CommentUpdateRequestDto comment)
         {
             var oldComment = await _commentRepository.GetByIdAsync(comment.CommentId);
 
@@ -85,9 +92,7 @@ namespace BlogWebApi.Application.Services
                 throw new ArgumentNullException(nameof(comment.CommentId), $"The comment with {comment.CommentId} does not exist.");
             }
 
-            oldComment.CommentName = comment.CommentName;
-            oldComment.Email = comment.Email;
-            oldComment.UpdatedBy = comment.UpdatedBy;
+            oldComment = CommentMapper.Map(comment);
 
             await _commentRepository.UpdateAsync(oldComment);
         }

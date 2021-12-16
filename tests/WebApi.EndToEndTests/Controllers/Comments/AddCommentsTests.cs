@@ -1,12 +1,12 @@
-﻿using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Application.Dto;
 using BlogWebApi.WebApi;
 using FluentAssertions;
 using LoremNET;
 using Newtonsoft.Json;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace WebApi.EndToEndTests.Controllers.Comments
@@ -28,14 +28,14 @@ namespace WebApi.EndToEndTests.Controllers.Comments
         {
             // Arrange
             var blogResponseMessage = await _client.PostAsync("/api/blogs/",
-                new StringContent(JsonConvert.SerializeObject(new Blog { BlogName = "Add_Comment_Ok" }),
+                new StringContent(JsonConvert.SerializeObject(new BlogAddRequestDto { BlogName = "Add_Comment_Ok" }),
                     Encoding.UTF8,
                     "application/json"));
             var blogContent = await blogResponseMessage.Content.ReadAsStringAsync();
 
-            var blog = JsonConvert.DeserializeObject<Blog>(blogContent);
+            var blog = JsonConvert.DeserializeObject<BlogByIdResponseDto>(blogContent);
 
-            var newPost = new Post
+            var newPost = new PostAddRequestDto
             {
                 BlogId = blog.BlogId,
                 PostName = "Add_Comment",
@@ -46,9 +46,9 @@ namespace WebApi.EndToEndTests.Controllers.Comments
                 new StringContent(JsonConvert.SerializeObject(newPost),
                     Encoding.UTF8,
                     "application/json"));
-            var post = JsonConvert.DeserializeObject<Post>(await postResponseMessage.Content.ReadAsStringAsync());
+            var post = JsonConvert.DeserializeObject<PostResponseDto>(await postResponseMessage.Content.ReadAsStringAsync());
 
-            var newComment = new Comment
+            var newComment = new CommentAddRequestDto
             {
                 CommentName = "AddComment",
                 Email = Lorem.Email(),
@@ -61,10 +61,10 @@ namespace WebApi.EndToEndTests.Controllers.Comments
                     Encoding.UTF8,
                     "application/json"));
 
-            var comment = JsonConvert.DeserializeObject<Comment>(await responseMessage.Content.ReadAsStringAsync());
+            var comment = JsonConvert.DeserializeObject<CommentResponseDto>(await responseMessage.Content.ReadAsStringAsync());
 
             // Assert
-            comment.Should().BeOfType<Comment>();
+            comment.Should().BeOfType<CommentResponseDto>();
             responseMessage.StatusCode.Should().Be(HttpStatusCode.Created);
         }
     }

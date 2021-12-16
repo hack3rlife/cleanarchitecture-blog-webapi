@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Application.Dto;
 using BlogWebApi.WebApi;
 using FluentAssertions;
 using LoremNET;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace WebApi.EndToEndTests.Controllers.Comments
@@ -29,13 +29,13 @@ namespace WebApi.EndToEndTests.Controllers.Comments
         {
             // Arrange
             var blogResponseMessage = await _client.PostAsync("/api/blogs/",
-                new StringContent(JsonConvert.SerializeObject(new Blog { BlogName = "Get_Comments_Blog" }),
+                new StringContent(JsonConvert.SerializeObject(new BlogAddRequestDto { BlogName = "Get_Comments_Blog" }),
                     Encoding.UTF8,
                     "application/json"));
 
-            var blog = JsonConvert.DeserializeObject<Blog>(await blogResponseMessage.Content.ReadAsStringAsync());
+            var blog = JsonConvert.DeserializeObject<BlogByIdResponseDto>(await blogResponseMessage.Content.ReadAsStringAsync());
 
-            var newPost = new Post
+            var newPost = new PostAddRequestDto
             {
                 BlogId = blog.BlogId,
                 PostName = "Get_Comments_Post",
@@ -46,29 +46,30 @@ namespace WebApi.EndToEndTests.Controllers.Comments
                 new StringContent(JsonConvert.SerializeObject(newPost),
                     Encoding.UTF8,
                     "application/json"));
-            var post = JsonConvert.DeserializeObject<Post>(await postResponseMessage.Content.ReadAsStringAsync());
+            var post = JsonConvert.DeserializeObject<PostResponseDto>(await postResponseMessage.Content.ReadAsStringAsync());
 
-            var newComment = new Comment
+            for (var i = 0; i < 5; i++)
             {
-                CommentName = "Get_Comments_Comment",
-                Email = Lorem.Email(),
-                PostId = post.PostId
-            };
+                var newComment = new CommentAddRequestDto
+                {
+                    CommentName = Lorem.Words(10),
+                    Email = Lorem.Email(),
+                    PostId = post.PostId
+                };
 
-            var commentResponseMessage = await _client.PostAsync("/api/comments/",
-                new StringContent(JsonConvert.SerializeObject(newComment),
-                    Encoding.UTF8,
-                    "application/json"));
-
-            var comment = JsonConvert.DeserializeObject<Comment>(await commentResponseMessage.Content.ReadAsStringAsync());
+                var commentResponseMessage = await _client.PostAsync("/api/comments/",
+                    new StringContent(JsonConvert.SerializeObject(newComment),
+                        Encoding.UTF8,
+                        "application/json"));
+            }
 
             // Act
             var responseMessage = await _client.GetAsync("/api/comments/");
 
-            var comments = JsonConvert.DeserializeObject<List<Comment>>(await responseMessage.Content.ReadAsStringAsync());
+            var comments = JsonConvert.DeserializeObject<List<CommentResponseDto>>(await responseMessage.Content.ReadAsStringAsync());
 
             // Assert
-            comments.Should().BeOfType<List<Comment>>();
+            comments.Should().BeOfType<List<CommentResponseDto>>();
             responseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
