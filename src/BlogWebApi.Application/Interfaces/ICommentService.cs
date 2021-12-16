@@ -1,16 +1,16 @@
-﻿using System;
+﻿using BlogWebApi.Application.Dto;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BlogWebApi.Domain;
 
 namespace BlogWebApi.Application.Interfaces
 {
     public interface ICommentService
     {
-        Task<IEnumerable<Comment>> GetAll(int skip, int take);
-        Task<Comment> GetBy(Guid commentId);
-        Task<Comment> Add(Comment comment);
-        Task Update(Comment comment);
+        Task<IEnumerable<CommentResponseDto>> GetAll(int skip, int take);
+        Task<CommentDetailsResponseDto> GetBy(Guid commentId);
+        Task<CommentResponseDto> Add(CommentAddRequestDto commentAddRequestDto);
+        Task Update(CommentUpdateRequestDto commentUpdateRequestDto);
         Task Delete(Guid commentId);
     }
 }

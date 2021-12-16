@@ -57,7 +57,7 @@ namespace Application.UnitTest.Services.CommentsService
             await _mockCommentRepository.MockSetupListAllAsync(new List<Comment>());
 
             // Act
-            var blogs = await _commentService.GetAll(take:-10);
+            var blogs = await _commentService.GetAll(take: -10);
 
             // Assert
             Assert.NotNull(blogs);
