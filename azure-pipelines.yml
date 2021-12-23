@@ -48,15 +48,6 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     publishTestResults: true    
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Artifact (*.zip) to $(Build.ArtifactStagingDirectory)'
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    zipAfterPublish: true
-    projects: 'src/**/BlogWebApi.WebApi.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-
 - task: PublishBuildArtifacts@1
   displayName: Publish Artifact (.zip) to $(Build.ArtifactStagingDirectory) 
   inputs:
