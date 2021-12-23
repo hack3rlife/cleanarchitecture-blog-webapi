@@ -23,6 +23,7 @@ steps:
   inputs:
     projects: '**/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
+
 - task: DotNetCoreCLI@2
   displayName: Executing Unit Testing
   inputs:
@@ -30,6 +31,7 @@ steps:
     projects: '**/*UnitTest/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
     publishTestResults: true
+
 - task: DotNetCoreCLI@2
   displayName: Executing Integration Tests
   inputs:
@@ -45,8 +47,20 @@ steps:
     projects: '**/*EndToEndTests/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
     publishTestResults: true    
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Zip Artifact to $(Build.ArtifactStagingDirectory)'
   inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-  condition: succeededOrFailed()
+    command: 'publish'
+    publishWebProjects: false
+    zipAfterPublish: true
+    projects: 'src/**/BlogWebApi.WebApi.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: Publish Artifact (.zip) to drop folder
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  
