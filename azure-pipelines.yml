@@ -54,9 +54,12 @@ steps:
     PathtoPublish: '$(build.artifactstagingdirectory)'
   condition: succeededOrFailed()
 
-- task: PublishBuildArtifacts@1
+- task: DotNetCoreCLI@2
+  displayName: 'Publish Artifact (*.zip)'
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+    command: 'publish'
+    publishWebProjects: false
+    zipAfterPublish: true
+    projects: 'src/**/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
   
