@@ -4,6 +4,7 @@ using LoremNET;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Domain;
 using Xunit;
 
@@ -48,7 +49,7 @@ namespace Application.UnitTest.Services.PostService
             MockPostRepository.Verify(x => x.UpdateAsync(It.IsAny<Post>()), Times.Once);
         }
 
-        [Fact(DisplayName = "Update_NonExistentPost_ThrowsArgumentException")]
+        [Fact(DisplayName = "Update_NonExistentPost_NotFoundException")]
         public async Task Update_NonExistentPost_IsCalledOnce()
         {
             //Arrange
@@ -66,29 +67,29 @@ namespace Application.UnitTest.Services.PostService
             MockPostRepository.MockSetupUpdateAsync(updatePost);
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await PostService.Update(updateDto));
+            var exception = await Assert.ThrowsAsync<NotFoundException>(async () => await PostService.Update(updateDto));
 
             //Assert
-            Assert.Equal($"The post with {updateDto.PostId} does not exist. (Parameter 'PostId')", exception.Message);
+            Assert.Equal($"The PostId: {updateDto.PostId} does not exist.", exception.Message);
 
             MockPostRepository.MockVerifyUpdateAsync(updatePost, Times.Never());
         }
 
-        [Fact(DisplayName = "Update_NullPost_ThrowsArgumentNullException")]
-        public async Task Update_NullPost_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_NullPost_ThrowsBadRequestException")]
+        public async Task Update_NullPost_ThrowsBadRequestException()
         {
             //Arrange
 
             //Act
             async Task Act() => await PostService.Update(null);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
 
             // Assert
-            Assert.Equal("The post cannot be null. (Parameter 'post')", exception.Message);
+            Assert.Equal("The post cannot be null.", exception.Message);
         }
 
-        [Fact(DisplayName = "Update_EmptyPostId_ThrowsArgumentNullException")]
-        public async Task Update_EmptyPostId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_EmptyPostId_ThrowsBadRequestException")]
+        public async Task Update_EmptyPostId_ThrowsBadRequestException()
         {
             //Arrange
             var updateDto = new PostUpdateRequestDto
@@ -100,16 +101,16 @@ namespace Application.UnitTest.Services.PostService
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Update(updateDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Update(updateDto));
 
             // Assert
-            Assert.Equal("The postId cannot be empty Guid. (Parameter 'post')", exception.Message);
+            Assert.Equal("The postId cannot be empty Guid.", exception.Message);
         }
 
-        [Theory(DisplayName = "Update_WithEmptyOrNullName_ThrowsArgumentNullException")]
+        [Theory(DisplayName = "Update_WithEmptyOrNullName_ThrowsBadRequestException")]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Update_WithEmptyOrNullName_ThrowsArgumentNullException(string name)
+        public async Task Update_WithEmptyOrNullName_ThrowsBadRequestException(string name)
         {
             //Arrange
             var updateDto = new PostUpdateRequestDto
@@ -121,16 +122,16 @@ namespace Application.UnitTest.Services.PostService
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Update(updateDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Update(updateDto));
 
             // Assert
-            Assert.Equal("The post name cannot be null or empty. (Parameter 'post')", exception.Message);
+            Assert.Equal("The post name cannot be null or empty.", exception.Message);
         }
 
-        [Theory(DisplayName = "Update_WithEmptyOrNullText_ThrowsArgumentNullException")]
+        [Theory(DisplayName = "Update_WithEmptyOrNullText_ThrowsBadRequestException")]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Update_WithEmptyOrNullText_ThrowsArgumentNullException(string text)
+        public async Task Update_WithEmptyOrNullText_ThrowsBadRequestException(string text)
         {
             //Arrange
             var updateDto = new PostUpdateRequestDto
@@ -142,14 +143,14 @@ namespace Application.UnitTest.Services.PostService
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Update(updateDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Update(updateDto));
 
             // Assert
-            Assert.Equal("The post text cannot be null or empty. (Parameter 'post')", exception.Message);
+            Assert.Equal("The post text cannot be null or empty.", exception.Message);
         }
 
-        [Fact(DisplayName = "Update_EmptyBlogId_ThrowsArgumentNullException")]
-        public async Task Update_EmptyBlogId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_EmptyBlogId_ThrowsBadRequestException")]
+        public async Task Update_EmptyBlogId_ThrowsBadRequestException()
         {
             //Arrange
             var updateDto = new PostUpdateRequestDto
@@ -160,14 +161,14 @@ namespace Application.UnitTest.Services.PostService
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Update(updateDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Update(updateDto));
 
             // Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'post')", exception.Message);
+            Assert.Equal("The blogId cannot be empty Guid.", exception.Message);
         }
 
-        [Fact(DisplayName = "Update_PostUsingLongName_ThrowsArgumentOutOfRangeException")]
-        public async Task Update_PostUsingLongName_ThrowsArgumentOutOfRangeException()
+        [Fact(DisplayName = "Update_PostUsingLongName_ThrowsBadRequestException")]
+        public async Task Update_PostUsingLongName_ThrowsBadRequestException()
         {
             //Arrange
             var updateDto = new PostUpdateRequestDto
@@ -180,10 +181,10 @@ namespace Application.UnitTest.Services.PostService
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await PostService.Update(updateDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Update(updateDto));
 
             //Assert
-            Assert.Equal("The post name cannot be longer than 255 characters. (Parameter 'PostName')", exception.Message);
+            Assert.Equal("The post name cannot be longer than 255 characters.", exception.Message);
         }
     }
 }

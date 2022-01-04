@@ -1,7 +1,8 @@
+using Application.UnitTest.Builders;
+using BlogWebApi.Application.Exceptions;
+using Moq;
 using System;
 using System.Threading.Tasks;
-using Application.UnitTest.Builders;
-using Moq;
 using Xunit;
 
 namespace Application.UnitTest.Services.BlogService
@@ -23,32 +24,32 @@ namespace Application.UnitTest.Services.BlogService
             MockBlogRepository.MockVerifyDeleteAsync(Times.Once());
         }
 
-        [Fact(DisplayName = "Delete_BlogWithEmptyGuid_ThrowsArgumentNullException")]
-        public async Task Delete_BlogWithEmptyGuid_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Delete_BlogWithEmptyGuid_ThrowsBadRequestException")]
+        public async Task Delete_BlogWithEmptyGuid_ThrowsBadRequestException()
         {
             // Arrange
             MockBlogRepository.MockSetupDeleteAsync();
 
             // Act
-           var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.Delete(Guid.Empty));
+           var exception = await Assert.ThrowsAsync<BadRequestException>(() => BlogService.Delete(Guid.Empty));
 
             // Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blogId')", exception.Message);
+            Assert.Equal("The blogId cannot be empty Guid.", exception.Message);
 
             MockBlogRepository.MockVerifyDeleteAsync(Times.Never());
         }
 
-        [Fact(DisplayName = "Delete_BlogWithInvalidGuid_ThrowsArgumentException")]
-        public async Task Delete_NonExistentBlog_ThrowsArgumentException()
+        [Fact(DisplayName = "Delete_BlogWithInvalidGuid_NotFoundException")]
+        public async Task Delete_NonExistentBlog_NotFoundException()
         {
             // Arrange
             var blogId = Guid.NewGuid();
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await BlogService.Delete(blogId));
+            var exception = await Assert.ThrowsAsync<NotFoundException>(async () => await BlogService.Delete(blogId));
 
             // Assert
-            Assert.Equal($"The blogId {blogId} does not exist. (Parameter 'blogId')", exception.Message);
+            Assert.Equal($"The blogId: {blogId} does not exist.", exception.Message);
 
             MockBlogRepository.MockVerifyDeleteAsync(Times.Never());
         }

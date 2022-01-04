@@ -3,6 +3,7 @@ using BlogWebApi.Application.Dto;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Exceptions;
 using Xunit;
 
 namespace Application.UnitTest.Services.PostService
@@ -25,8 +26,8 @@ namespace Application.UnitTest.Services.PostService
             MockPostRepository.MockVerifyGetByIdAsync(thePost, Times.Once());
         }
 
-        [Fact(DisplayName = "GetBy_PostId_ThrowsArgumentNullException")]
-        public async Task GetBy_PostId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "GetBy_PostId_ThrowsBadRequestException")]
+        public async Task GetBy_PostId_ThrowsBadRequestException()
         {
             //Arrange
 
@@ -34,8 +35,8 @@ namespace Application.UnitTest.Services.PostService
             async Task Act() => await PostService.GetBy(Guid.Empty);
 
             //Assert
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
-            Assert.Equal("The postId cannot be empty Guid. (Parameter 'postId')", exception.Message);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
+            Assert.Equal("The postId cannot be empty Guid.", exception.Message);
         }
 
         [Fact(DisplayName = "GetBy_PostIdIncludingCommentsNoPagingValues_UsesDefaultValuesForSkipAndTake")]
@@ -110,8 +111,8 @@ namespace Application.UnitTest.Services.PostService
             MockPostRepository.MockVerifyGetByIdWithPostsAsync(returnPost.PostId, skip, take, Times.Once());
         }
 
-        [Fact(DisplayName = "GetBy_PostIdIncludingComments_ThrowsArgumentNullException")]
-        public async Task GetBy_PostIdIncludingComments_ThrowsArgumentNullException()
+        [Fact(DisplayName = "GetBy_PostIdIncludingComments_ThrowsBadRequestException")]
+        public async Task GetBy_PostIdIncludingComments_ThrowsBadRequestException()
         {
             //Arrange
 
@@ -119,8 +120,8 @@ namespace Application.UnitTest.Services.PostService
             async Task Act() => await PostService.GetCommentsBy(Guid.Empty);
 
             //Assert 
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
-            Assert.Equal("The postId cannot be empty Guid. (Parameter 'postId')", exception.Message);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
+            Assert.Equal("The postId cannot be empty Guid.", exception.Message);
         }
     }
 }

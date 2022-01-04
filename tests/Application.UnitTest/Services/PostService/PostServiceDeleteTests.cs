@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Application.UnitTest.Builders;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Domain;
 using Moq;
 using Xunit;
@@ -25,8 +26,8 @@ namespace Application.UnitTest.Services.PostService
             MockPostRepository.MockVerifyDeleteAsync(post, Times.Once());
         }
 
-        [Fact(DisplayName = "Delete_PostWithEmptyPostId_ThrowsArgumentNullException")]
-        public async Task Delete_PostWithEmptyPostId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Delete_PostWithEmptyPostId_ThrowsBadRequestException")]
+        public async Task Delete_PostWithEmptyPostId_ThrowsBadRequestException()
         {
             // Arrange
             var postId = Guid.Empty;
@@ -35,14 +36,14 @@ namespace Application.UnitTest.Services.PostService
             async Task Act() => await PostService.Delete(postId);
 
             //Assert
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
-            Assert.Equal("The postId cannot be empty Guid. (Parameter 'postId')", exception.Message);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
+            Assert.Equal("The postId cannot be empty Guid.", exception.Message);
 
             MockPostRepository.MockVerifyDeleteAsync(It.IsAny<Post>(), Times.Never());
         }
 
-        [Fact(DisplayName = "Delete_NonExistingPost_ThrowsArgumentException")]
-        public async Task Delete_NonExistingPost_ThrowsArgumentException()
+        [Fact(DisplayName = "Delete_NonExistingPost_NotFoundException")]
+        public async Task Delete_NonExistingPost_NotFoundException()
         {
             // Arrange
             var postId = Guid.NewGuid();
@@ -51,8 +52,8 @@ namespace Application.UnitTest.Services.PostService
             async Task Act() => await PostService.Delete(postId);
 
             //Assert
-            var exception = await Assert.ThrowsAsync<ArgumentException>(Act);
-            Assert.Equal($"The postId {postId} does not exist. (Parameter 'postId')", exception.Message);
+            var exception = await Assert.ThrowsAsync<NotFoundException>(Act);
+            Assert.Equal($"The postId: {postId} does not exist.", exception.Message);
 
             MockPostRepository.MockVerifyDeleteAsync(It.IsAny<Post>(), Times.Never());
         }

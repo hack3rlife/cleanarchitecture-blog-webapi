@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Application.UnitTest.Builders;
 using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Domain;
 using LoremNET;
 using Moq;
@@ -33,8 +34,8 @@ namespace Application.UnitTest.Services.BlogService
             MockBlogRepository.MockVerifyUpdateAsync(Times.Once());
         }
 
-        [Fact(DisplayName = "Update_NonExistentBlog_ThrowsArgumentException")]
-        public async Task Update_NonExistentBlog_ThrowsArgumentException()
+        [Fact(DisplayName = "Update_NonExistentBlog_NotFoundException")]
+        public async Task Update_NonExistentBlog_NotFoundException()
         {
             //Arrange
             var updateBlog = BlogBuilder.Default();
@@ -50,30 +51,30 @@ namespace Application.UnitTest.Services.BlogService
 
             // Act
             async Task Act() => await BlogService.Update(updateRequestDto);
-            var exception = await Assert.ThrowsAsync<ArgumentException>(Act);
+            var exception = await Assert.ThrowsAsync<NotFoundException>(Act);
 
             // Assert
-            Assert.Equal($"The blog with {updateBlog.BlogId} does not exist. (Parameter 'BlogId')", exception.Message);
+            Assert.Equal($"The blog: {updateBlog.BlogId} does not exist.", exception.Message);
 
             MockBlogRepository.MockVerifyUpdateAsync(Times.Never());
         }
 
-        [Fact(DisplayName = "Update_NullBlog_ThrowsArgumentNullException")]
-        public async Task Update_NullBlog_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_NullBlog_ThrowsBadRequestException")]
+        public async Task Update_NullBlog_ThrowsBadRequestException()
         {
             //Arrange
 
             // Act
             async Task Act() => await BlogService.Update(null);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
 
             // Assert
-            Assert.Equal("Value cannot be null. (Parameter 'blog')", exception.Message);
+            Assert.Equal("The blog information cannot be null.", exception.Message);
 
         }
 
-        [Fact(DisplayName = "Update_WithEmptyBlogId_ThrowsArgumentNullException")]
-        public async Task Update_WithEmptyBlogId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_WithEmptyBlogId_ThrowsBadRequestException")]
+        public async Task Update_WithEmptyBlogId_ThrowsBadRequestException()
         {
             //Arrange
             var updateBlog = new Blog
@@ -90,17 +91,17 @@ namespace Application.UnitTest.Services.BlogService
 
             // Act
             async Task Act() => await BlogService.Update(updateRequestDto);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
 
             // Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blog')", exception.Message);
+            Assert.Equal("The blogId cannot be empty Guid.", exception.Message);
 
         }
 
-        [Theory(DisplayName = "Update_WithEmptyOrNullName_ThrowsArgumentNullException")]
+        [Theory(DisplayName = "Update_WithEmptyOrNullName_ThrowsBadRequestException")]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Update_WithEmptyOrNullName_ThrowsArgumentNullException(string name)
+        public async Task Update_WithEmptyOrNullName_ThrowsBadRequestException(string name)
         {
             //Arrange
             var blog = BlogBuilder.DefaultForBlogUpdateRequestDto();
@@ -108,15 +109,15 @@ namespace Application.UnitTest.Services.BlogService
 
             // Act
             async Task Act() => await BlogService.Update(blog);
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(Act);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
 
             // Assert
-            Assert.Equal("The blog name cannot be null or empty. (Parameter 'blog')", exception.Message);
+            Assert.Equal("The blog name cannot be null or empty.", exception.Message);
 
         }
 
-        [Fact(DisplayName = "Update_BlogWithLongBlogName_ThrowsNullArgumentException")]
-        public async Task Update_BlogWithLongBlogName_ThrowsNullArgumentException()
+        [Fact(DisplayName = "Update_BlogWithLongBlogName_ThrowsBadRequestException")]
+        public async Task Update_BlogWithLongBlogName_ThrowsBadRequestException()
         {
             //Arrange
             var blog = BlogBuilder.DefaultForBlogUpdateRequestDto();
@@ -124,11 +125,10 @@ namespace Application.UnitTest.Services.BlogService
 
             //Act
             async Task Act() => await BlogService.Update(blog);
-            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(Act);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
 
             //Assert
-            Assert.Equal("The blog name cannot be longer than 255 characters. (Parameter 'BlogName')",
-                exception.Message);
+            Assert.Equal("The blog name cannot be longer than 255 characters.", exception.Message);
 
         }
     }

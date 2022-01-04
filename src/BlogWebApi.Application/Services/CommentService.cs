@@ -1,4 +1,5 @@
 ﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Application.Mappers;
 using System;
@@ -25,7 +26,7 @@ namespace BlogWebApi.Application.Services
         public Task<CommentDetailsResponseDto> GetBy(Guid commentId)
         {
             if (commentId == Guid.Empty)
-                throw new ArgumentNullException(nameof(commentId), "The commentId cannot be empty Guid.");
+                throw new BadRequestException( "The commentId cannot be empty Guid.");
 
             return GetByInternal(commentId);
         }
@@ -40,17 +41,17 @@ namespace BlogWebApi.Application.Services
         public Task<CommentResponseDto> Add(CommentAddRequestDto commentAddRequestDto)
         {
             if (commentAddRequestDto == null)
-                throw new ArgumentNullException(nameof(commentAddRequestDto), "The comment cannot be null.");
+                throw new BadRequestException("The comment cannot be null.");
 
             if (string.IsNullOrEmpty(commentAddRequestDto.CommentName) || string.IsNullOrWhiteSpace(commentAddRequestDto.CommentName))
-                throw new ArgumentNullException(nameof(commentAddRequestDto), "The comment name cannot be null or empty.");
+                throw new BadRequestException("The comment name cannot be null or empty.");
             
             //TODO: Validate email is valid
             if (string.IsNullOrEmpty(commentAddRequestDto.Email) || string.IsNullOrWhiteSpace(commentAddRequestDto.Email))
-                throw new ArgumentNullException(nameof(commentAddRequestDto), "The email cannot be null or empty.");
+                throw new BadRequestException("The email cannot be null or empty.");
             
             if (commentAddRequestDto.PostId == Guid.Empty)
-                throw new ArgumentNullException(nameof(commentAddRequestDto), "The postId cannot be empty Guid.");
+                throw new BadRequestException("The postId cannot be empty Guid.");
 
             return AddInternal(commentAddRequestDto);
         }
@@ -65,20 +66,20 @@ namespace BlogWebApi.Application.Services
         public Task Update(CommentUpdateRequestDto commentUpdateRequestDto)
         {
             if(commentUpdateRequestDto == null)
-                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The comment cannot be null.");
+                throw new BadRequestException("The comment cannot be null.");
 
             if (commentUpdateRequestDto.CommentId == Guid.Empty)
-                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The commentId cannot be empty Guid.");
+                throw new BadRequestException("The commentId cannot be empty Guid.");
 
             if (string.IsNullOrEmpty(commentUpdateRequestDto.CommentName) || string.IsNullOrWhiteSpace(commentUpdateRequestDto.CommentName))
-                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The comment name cannot be null or empty.");
+                throw new BadRequestException("The comment name cannot be null or empty.");
 
             //TODO: Validate email is valid
             if (string.IsNullOrEmpty(commentUpdateRequestDto.Email) || string.IsNullOrWhiteSpace(commentUpdateRequestDto.Email))
-                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The email cannot be null or empty.");
+                throw new BadRequestException("The email cannot be null or empty.");
 
             if (commentUpdateRequestDto.PostId == Guid.Empty)
-                throw new ArgumentNullException(nameof(commentUpdateRequestDto), "The postId cannot be empty Guid.");
+                throw new BadRequestException("The postId cannot be empty Guid.");
 
             return UpdateInternal(commentUpdateRequestDto);
         }
@@ -89,7 +90,7 @@ namespace BlogWebApi.Application.Services
 
             if (oldComment == null)
             {
-                throw new ArgumentNullException(nameof(comment.CommentId), $"The comment with {comment.CommentId} does not exist.");
+                throw new NotFoundException(nameof(comment), comment.CommentId);
             }
 
             oldComment = CommentMapper.Map(comment);
@@ -100,7 +101,7 @@ namespace BlogWebApi.Application.Services
         public Task Delete(Guid commentId)
         {
             if(commentId == Guid.Empty)
-                throw new ArgumentNullException(nameof(commentId), "The commentId cannot be empty Guid.");
+                throw new BadRequestException( "The commentId cannot be empty Guid.");
 
             return DeleteInternal(commentId);
         }
@@ -111,7 +112,7 @@ namespace BlogWebApi.Application.Services
 
             if (comment == null)
             {
-                throw new ArgumentNullException(nameof(commentId), $"The comment with {commentId} does not exist.");
+                throw new NotFoundException(nameof(comment), commentId);
             }
 
             await _commentRepository.DeleteAsync(comment);

@@ -1,4 +1,5 @@
 ﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Application.Mappers;
 using BlogWebApi.Domain;
@@ -28,7 +29,7 @@ namespace BlogWebApi.Application.Services
         public Task<BlogByIdResponseDto> GetBy(Guid blogId)
         {
             if (blogId == Guid.Empty)
-                throw new ArgumentNullException(nameof(blogId), "The blogId cannot be empty Guid.");
+                throw new BadRequestException( $"The {nameof(blogId)} cannot be empty Guid.");
            
             return  GetByInternal(blogId);
         }
@@ -43,7 +44,7 @@ namespace BlogWebApi.Application.Services
         public Task<BlogDetailsResponseDto> GetPostsBy(Guid blogId, int skip = 0, int take = 10)
         {
             if (blogId == Guid.Empty)
-                throw new ArgumentNullException(nameof(blogId), "The blogId cannot be empty Guid.");
+                throw new BadRequestException($"The {nameof(blogId)} cannot be empty Guid.");
 
             return GetPostsByInternal(blogId, skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
         }
@@ -58,16 +59,15 @@ namespace BlogWebApi.Application.Services
         public Task<BlogDetailsResponseDto> Add(BlogAddRequestDto blogAddRequestDto)
         {
             if (blogAddRequestDto == null)
-                throw new ArgumentNullException(nameof(blogAddRequestDto));
+                throw new BadRequestException("Blog information cannot be null.");
 
             if (string.IsNullOrEmpty(blogAddRequestDto.BlogName) ||
                 string.IsNullOrWhiteSpace(blogAddRequestDto.BlogName))
-                throw new ArgumentNullException(nameof(blogAddRequestDto), "The blog name cannot be null or empty.");
+                throw new BadRequestException( "The blog name cannot be null or empty.");
 
             if (blogAddRequestDto.BlogName.Length > 255)
             {
-                throw new ArgumentOutOfRangeException(nameof(blogAddRequestDto.BlogName),
-                    "The blog name cannot be longer than 255 characters.");
+                throw new BadRequestException("The blog name cannot be longer than 255 characters.");
             }
 
             var blog = BlogMapper.FromBlogAddRequestDto(blogAddRequestDto);
@@ -85,17 +85,17 @@ namespace BlogWebApi.Application.Services
         public Task Update(BlogUpdateRequestDto blog)
         {
             if (blog == null)
-                throw new ArgumentNullException(nameof(blog));
+                throw new BadRequestException("The blog information cannot be null.");
 
             if (blog.BlogId == Guid.Empty)
-                throw new ArgumentNullException(nameof(blog), "The blogId cannot be empty Guid.");
+                throw new BadRequestException("The blogId cannot be empty Guid.");
 
             if (string.IsNullOrEmpty(blog.BlogName) || string.IsNullOrWhiteSpace(blog.BlogName))
-                throw new ArgumentNullException(nameof(blog), "The blog name cannot be null or empty.");
+                throw new BadRequestException( "The blog name cannot be null or empty.");
 
             if (blog.BlogName.Length > 255)
             {
-                throw new ArgumentOutOfRangeException(nameof(blog.BlogName), "The blog name cannot be longer than 255 characters.");
+                throw new BadRequestException("The blog name cannot be longer than 255 characters.");
             }
 
             return UpdateInternal(blog);
@@ -107,7 +107,7 @@ namespace BlogWebApi.Application.Services
 
             if (oldBlog == null)
             {
-                throw new ArgumentException($"The blog with {blog.BlogId} does not exist.", nameof(blog.BlogId));
+                throw new NotFoundException(nameof(blog), blog.BlogId);
             }
 
             oldBlog.BlogName = blog.BlogName;
@@ -119,7 +119,7 @@ namespace BlogWebApi.Application.Services
         public Task Delete(Guid blogId)
         {
             if (blogId == Guid.Empty)
-                throw new ArgumentNullException(nameof(blogId), "The blogId cannot be empty Guid.");
+                throw new BadRequestException($"The {nameof(blogId)} cannot be empty Guid.");
 
             return DeleteInternal(blogId);
         }
@@ -130,7 +130,7 @@ namespace BlogWebApi.Application.Services
 
             if (blog == null)
             {
-                throw new ArgumentException($"The blogId {blogId} does not exist.", nameof(blogId));
+                throw new NotFoundException(nameof(blogId), blogId);
             }
 
             await _blogRepository.DeleteAsync(blog);

@@ -1,4 +1,5 @@
 ﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Application.Mappers;
 using System;
@@ -26,7 +27,7 @@ namespace BlogWebApi.Application.Services
         public Task<PostDetailsResponseDto> GetBy(Guid postId)
         {
             if (postId == Guid.Empty)
-                throw new ArgumentNullException(nameof(postId), "The postId cannot be empty Guid.");
+                throw new BadRequestException( "The postId cannot be empty Guid.");
 
             return GetByInternal(postId);
         }
@@ -41,7 +42,7 @@ namespace BlogWebApi.Application.Services
         public async Task<PostDetailsResponseDto> GetCommentsBy(Guid postId, int skip, int take)
         {
             if (postId == Guid.Empty)
-                throw new ArgumentNullException(nameof(postId), "The postId cannot be empty Guid.");
+                throw new BadRequestException( "The postId cannot be empty Guid.");
 
             var post = await _postRepository.GetByIdWithCommentsAsync(postId, skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
 
@@ -51,21 +52,20 @@ namespace BlogWebApi.Application.Services
         public Task<PostResponseDto> Add(PostAddRequestDto post)
         {
             if (post == null)
-                throw new ArgumentNullException(nameof(post), "The post cannot be null.");
+                throw new BadRequestException("The post cannot be null.");
 
             if (string.IsNullOrEmpty(post.PostName) || string.IsNullOrWhiteSpace(post.PostName))
-                throw new ArgumentNullException(nameof(post.PostName), "The post name cannot be null or empty.");
+                throw new BadRequestException("The post name cannot be null or empty.");
 
             if (string.IsNullOrEmpty(post.Text) || string.IsNullOrWhiteSpace(post.Text))
-                throw new ArgumentNullException(nameof(post.Text), "The post text cannot be null or empty.");
+                throw new BadRequestException("The post text cannot be null or empty.");
 
             if (post.BlogId == Guid.Empty)
-                throw new ArgumentNullException(nameof(post.BlogId), "The blogId cannot be empty Guid.");
+                throw new BadRequestException("The blogId cannot be empty Guid.");
 
             if (post.PostName.Length > 255)
             {
-                throw new ArgumentOutOfRangeException(nameof(post.PostName),
-                    "The post name cannot be longer than 255 characters.");
+                throw new BadRequestException("The post name cannot be longer than 255 characters.");
             }
 
             return AddInternal(post);
@@ -81,24 +81,23 @@ namespace BlogWebApi.Application.Services
         public Task Update(PostUpdateRequestDto post)
         {
             if (post == null)
-                throw new ArgumentNullException(nameof(post), "The post cannot be null.");
+                throw new BadRequestException( "The post cannot be null.");
 
             if (post.PostId == Guid.Empty)
-                throw new ArgumentNullException(nameof(post), "The postId cannot be empty Guid.");
+                throw new BadRequestException( "The postId cannot be empty Guid.");
 
             if (string.IsNullOrEmpty(post.PostName) || string.IsNullOrWhiteSpace(post.PostName))
-                throw new ArgumentNullException(nameof(post), "The post name cannot be null or empty.");
+                throw new BadRequestException( "The post name cannot be null or empty.");
 
             if (string.IsNullOrEmpty(post.Text) || string.IsNullOrWhiteSpace(post.Text))
-                throw new ArgumentNullException(nameof(post), "The post text cannot be null or empty.");
+                throw new BadRequestException( "The post text cannot be null or empty.");
 
             if (post.BlogId == Guid.Empty)
-                throw new ArgumentNullException(nameof(post), "The blogId cannot be empty Guid.");
+                throw new BadRequestException("The blogId cannot be empty Guid.");
 
             if (post.PostName.Length > 255)
             {
-                throw new ArgumentOutOfRangeException(nameof(post.PostName),
-                    "The post name cannot be longer than 255 characters.");
+                throw new BadRequestException("The post name cannot be longer than 255 characters.");
             }
 
             return UpdateInternal(post);
@@ -110,7 +109,7 @@ namespace BlogWebApi.Application.Services
 
             if (oldPost == null)
             {
-                throw new ArgumentException($"The post with {postUpdateRequestDto.PostId} does not exist.", nameof(postUpdateRequestDto.PostId));
+                throw new NotFoundException(nameof(postUpdateRequestDto.PostId), postUpdateRequestDto.PostId);
             }
 
             oldPost = PostUpdateRequestMapper.Map(postUpdateRequestDto);
@@ -121,7 +120,7 @@ namespace BlogWebApi.Application.Services
         public Task Delete(Guid postId)
         {
             if (postId == Guid.Empty)
-                throw new ArgumentNullException(nameof(postId), "The postId cannot be empty Guid.");
+                throw new BadRequestException( "The postId cannot be empty Guid.");
 
             return DeleteInternal(postId);
         }
@@ -132,7 +131,7 @@ namespace BlogWebApi.Application.Services
 
             if (post == null)
             {
-                throw new ArgumentException($"The postId {postId} does not exist.", nameof(postId));
+                throw new NotFoundException(nameof(postId), postId);
             }
 
             await _postRepository.DeleteAsync(post);
