@@ -5,6 +5,7 @@ using BlogWebApi.Application.Services;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Exceptions;
 using Xunit;
 
 namespace Application.UnitTest.Services.CommentsService
@@ -35,17 +36,17 @@ namespace Application.UnitTest.Services.CommentsService
             _mockCommentRepository.MockVerifyGetByIdAsync(newComment, Times.Once());
         }
 
-        [Fact(DisplayName = "GetBy_EmptyGuid_ThrowsArgumentNullException")]
-        public async Task GetBy_EmptyGuid_ThrowsArgumentNullException()
+        [Fact(DisplayName = "GetBy_EmptyGuid_ThrowsBadRequestException")]
+        public async Task GetBy_EmptyGuid_ThrowsBadRequestException()
         {
             // Arrange
             var commentId = Guid.Empty;
 
             // Act
-           var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _commentService.GetBy(commentId));
+           var exception = await Assert.ThrowsAsync<BadRequestException>(() => _commentService.GetBy(commentId));
 
             // Assert
-           Assert.Equal("The commentId cannot be empty Guid. (Parameter 'commentId')", exception.Message);
+           Assert.Equal("The commentId cannot be empty Guid.", exception.Message);
         }
     }
 }

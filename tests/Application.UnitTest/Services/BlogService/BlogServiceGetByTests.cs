@@ -2,6 +2,7 @@ using Application.UnitTest.Builders;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Exceptions;
 using Xunit;
 
 namespace Application.UnitTest.Services.BlogService
@@ -26,32 +27,32 @@ namespace Application.UnitTest.Services.BlogService
             MockBlogRepository.MockVerifyGetByIdAsync(expectedBlog, Times.Once());
         }
 
-        [Fact(DisplayName = "GetBy_EmptyGuid_ThrowsArgumentNullException")]
-        public async Task GetBy_EmptyGuid_ThrowsArgumentNullException()
+        [Fact(DisplayName = "GetBy_EmptyGuid_ThrowsBadRequestException")]
+        public async Task GetBy_EmptyGuid_ThrowsBadRequestException()
         {
             //Arrange
             var blogId = Guid.Empty;
 
             //Act
-           var exception =  await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.GetBy(blogId));
+           var exception =  await Assert.ThrowsAsync<BadRequestException>(() => BlogService.GetBy(blogId));
 
             //Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blogId')", exception.Message);
+            Assert.Equal("The blogId cannot be empty Guid.", exception.Message);
 
             MockBlogRepository.MockVerifyGetByIdWithPostsAsync(blogId, 0, 10, Times.Never());
         }
 
-        [Fact(DisplayName = "GetBy_PostIdWithEmptyBlogId_ThrowsArgumentNullException")]
-        public async Task GetBy_PostIdWithEmptyBlogId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "GetBy_PostIdWithEmptyBlogId_ThrowsBadRequestException")]
+        public async Task GetBy_PostIdWithEmptyBlogId_ThrowsBadRequestException()
         {
             //Arrange
             var blogId = Guid.Empty;
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => BlogService.GetPostsBy(blogId));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(() => BlogService.GetPostsBy(blogId));
 
             //Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'blogId')", exception.Message);
+            Assert.Equal("The blogId cannot be empty Guid.", exception.Message);
 
             MockBlogRepository.MockVerifyGetByIdWithPostsAsync(blogId, 0, 10, Times.Never());
         }

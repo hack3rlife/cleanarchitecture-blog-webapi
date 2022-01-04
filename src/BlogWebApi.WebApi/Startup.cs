@@ -1,5 +1,6 @@
 using BlogWebApi.Application;
 using BlogWebApi.Infrastructure;
+using BlogWebApi.WebApi.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -59,7 +60,9 @@ namespace BlogWebApi.WebApi
             //Registering Infrastructure Layer Dependencies
             services.AddInfrastructureServices(Configuration);
 
-            services.AddControllers();
+            // WebAPI Layer 
+            services
+                .AddControllers(c => c.Filters.Add<CustomExceptionFilterAttribute>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

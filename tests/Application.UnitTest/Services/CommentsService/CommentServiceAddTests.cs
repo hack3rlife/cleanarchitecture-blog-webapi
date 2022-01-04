@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.UnitTest.Builders;
 using Application.UnitTest.Mocks;
 using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Application.Services;
 using BlogWebApi.Domain;
@@ -45,23 +46,23 @@ namespace Application.UnitTest.Services.CommentsService
             _mockCommentRepository.MockVerifyAddAsync(Times.Once());
         }
 
-        [Fact(DisplayName = "Add_CommentIsNull_ThrowsArgumentNullException")]
-        public async Task Add_CommentIsNull_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Add_CommentIsNull_ThrowsBadRequestException")]
+        public async Task Add_CommentIsNull_ThrowsBadRequestException()
         {
             // Arrange
             CommentAddRequestDto newComment = null;
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Add(newComment));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Add(newComment));
             
             // Assert
-            Assert.Equal("The comment cannot be null. (Parameter 'commentAddRequestDto')", exception.Message);
+            Assert.Equal("The comment cannot be null.", exception.Message);
 
             _mockCommentRepository.MockVerifyAddAsync(Times.Never());
         }
 
-        [Fact(DisplayName = "Add_CommentWithEmptyName_ThrowsArgumentNullException")]
-        public async Task Add_CommentWithEmptyName_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Add_CommentWithEmptyName_ThrowsBadRequestException")]
+        public async Task Add_CommentWithEmptyName_ThrowsBadRequestException()
         {
             // Arrange
             var newCommentDto = new CommentAddRequestDto
@@ -72,16 +73,16 @@ namespace Application.UnitTest.Services.CommentsService
             };
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Add(newCommentDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Add(newCommentDto));
 
             // Assert
-            Assert.Equal("The comment name cannot be null or empty. (Parameter 'commentAddRequestDto')", exception.Message);
+            Assert.Equal("The comment name cannot be null or empty.", exception.Message);
 
             _mockCommentRepository.MockVerifyAddAsync(Times.Never());
         }
 
-        [Fact(DisplayName = "Add_CommentWithEmptyEmail_ThrowsArgumentNullException")]
-        public async Task Add_CommentWithEmptyEmail_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Add_CommentWithEmptyEmail_ThrowsBadRequestException")]
+        public async Task Add_CommentWithEmptyEmail_ThrowsBadRequestException()
         {
             // Arrange
             var newCommentDto = new CommentAddRequestDto
@@ -92,16 +93,16 @@ namespace Application.UnitTest.Services.CommentsService
             };
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Add(newCommentDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Add(newCommentDto));
 
             // Assert
-            Assert.Equal("The email cannot be null or empty. (Parameter 'commentAddRequestDto')", exception.Message);
+            Assert.Equal("The email cannot be null or empty.", exception.Message);
 
             _mockCommentRepository.MockVerifyAddAsync(Times.Never());
         }
 
-        [Fact(DisplayName = "Add_CommentWithEmptyPostId_ThrowsArgumentNullException")]
-        public async Task Add_CommentWithEmptyPostId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Add_CommentWithEmptyPostId_ThrowsBadRequestException")]
+        public async Task Add_CommentWithEmptyPostId_ThrowsBadRequestException()
         {
             // Arrange
             var newCommentDto = new CommentAddRequestDto
@@ -112,10 +113,10 @@ namespace Application.UnitTest.Services.CommentsService
             };
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Add(newCommentDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Add(newCommentDto));
 
             // Assert
-            Assert.Equal("The postId cannot be empty Guid. (Parameter 'commentAddRequestDto')", exception.Message);
+            Assert.Equal("The postId cannot be empty Guid.", exception.Message);
 
             _mockCommentRepository.MockVerifyAddAsync(Times.Never());
         }

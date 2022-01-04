@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Application.UnitTest.Builders;
 using Application.UnitTest.Mocks;
 using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Application.Services;
 using BlogWebApi.Domain;
@@ -47,8 +48,8 @@ namespace Application.UnitTest.Services.CommentsService
             _mockCommentRepository.MockVerifyUpdateAsync(Times.Once());
         }
 
-        [Fact(DisplayName = "Update_CommentNotExistent_ThrowsArgumentException")]
-        public async Task Update_CommentNotExistent_ThrowsArgumentException()
+        [Fact(DisplayName = "Update_CommentNotExistent_NotFoundException")]
+        public async Task Update_CommentNotExistent_NotFoundException()
         {
             // Arrange
             var newCommentUpdateRequestDto = new CommentUpdateRequestDto
@@ -64,28 +65,28 @@ namespace Application.UnitTest.Services.CommentsService
             _mockCommentRepository.MockSetupUpdateAsync();
 
             // Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<NotFoundException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
-            Assert.Equal($"The comment with {newCommentUpdateRequestDto.CommentId} does not exist. (Parameter 'CommentId')", exception.Message);
+            Assert.Equal($"The comment: {newCommentUpdateRequestDto.CommentId} does not exist.", exception.Message);
 
             _mockCommentRepository.MockVerifyUpdateAsync(Times.Never());
         }
 
-        [Fact(DisplayName = "Update_NullComment_ThrowsArgumentNullException")]
-        public async Task Update_NullComment_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_NullComment_ThrowsBadRequestException")]
+        public async Task Update_NullComment_ThrowsBadRequestException()
         {
             //Arrange
            
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Update(null));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Update(null));
 
             // Assert
-            Assert.Equal("The comment cannot be null. (Parameter 'commentUpdateRequestDto')", exception.Message);
+            Assert.Equal("The comment cannot be null.", exception.Message);
         }
 
-        [Fact(DisplayName = "Update_EmptyCommentId_ThrowsArgumentNullException")]
-        public async Task Update_EmptyCommentId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_EmptyCommentId_ThrowsBadRequestException")]
+        public async Task Update_EmptyCommentId_ThrowsBadRequestException()
         {
             //Arrange
             var newCommentUpdateRequestDto = new CommentUpdateRequestDto
@@ -100,37 +101,38 @@ namespace Application.UnitTest.Services.CommentsService
             comment.CommentId = Guid.Empty;
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
-            Assert.Equal("The commentId cannot be empty Guid. (Parameter 'commentUpdateRequestDto')", exception.Message);
+            Assert.Equal("The commentId cannot be empty Guid.", exception.Message);
         }
 
-        [Theory(DisplayName = "Update_WithEmptyOrNullName_ThrowsArgumentNullException")]
+        [Theory(DisplayName = "Update_WithEmptyOrNullName_ThrowsBadRequestException")]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Update_WithEmptyOrNullName_ThrowsArgumentNullException(string name)
+        public async Task Update_WithEmptyOrNullName_ThrowsBadRequestException(string name)
         {
             //Arrange
             var newCommentUpdateRequestDto = new CommentUpdateRequestDto
             {
                 PostId = Guid.NewGuid(),
+                CommentName = name,
                 CommentId = Guid.NewGuid(),
                 UpdatedBy = "hack3rlife",
                 Email = Lorem.Email()
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
-            Assert.Equal("The comment name cannot be null or empty. (Parameter 'commentUpdateRequestDto')", exception.Message);
+            Assert.Equal("The comment name cannot be null or empty.", exception.Message);
         }
 
-        [Theory(DisplayName = "Update_WithEmptyOrNullEmail_ThrowsArgumentNullException")]
+        [Theory(DisplayName = "Update_WithEmptyOrNullEmail_ThrowsBadRequestException")]
         [InlineData("")]
         [InlineData(null)]
-        public async Task Update_WithEmptyOrNullEmail_ThrowsArgumentNullException(string email)
+        public async Task Update_WithEmptyOrNullEmail_ThrowsBadRequestException(string email)
         {
             //Arrange
             var newCommentUpdateRequestDto = new CommentUpdateRequestDto
@@ -139,17 +141,18 @@ namespace Application.UnitTest.Services.CommentsService
                 CommentId = Guid.NewGuid(),
                 UpdatedBy = "hack3rlife",
                 CommentName = Lorem.Sentence(5),
+                Email = email
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
-            Assert.Equal("The email cannot be null or empty. (Parameter 'commentUpdateRequestDto')", exception.Message);
+            Assert.Equal("The email cannot be null or empty.", exception.Message);
         }
 
-        [Fact(DisplayName = "Update_EmptyPostId_ThrowsArgumentNullException")]
-        public async Task Update_EmptyPostId_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Update_EmptyPostId_ThrowsBadRequestException")]
+        public async Task Update_EmptyPostId_ThrowsBadRequestException()
         {
             //Arrange
             var newCommentUpdateRequestDto = new CommentUpdateRequestDto
@@ -161,10 +164,10 @@ namespace Application.UnitTest.Services.CommentsService
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
-            Assert.Equal("The postId cannot be empty Guid. (Parameter 'commentUpdateRequestDto')", exception.Message);
+            Assert.Equal("The postId cannot be empty Guid.", exception.Message);
         }
     }
 }

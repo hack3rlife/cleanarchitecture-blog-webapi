@@ -36,7 +36,7 @@ This project will include Domain Models, Interfaces that will be implemented by 
 
 ### Domain Types
 * Domain Models (e.g. `Blog`)
-* Interfaces (e.g. `IBlogRepository`)
+* Interfaces
 * Exceptions
 * Enums
 
@@ -45,6 +45,7 @@ This project will contain the application logic. The only dependency that should
 
 ### Appllication Types
 * Exceptions (e.g.: `ApplicationValidationException`)
+* Interfaces (e.g. `IBlogRepository`)
 * DTOs (e.g.: `BlogAddRequestDto`)
 * Mappers (e.g: `BlogMapper`)
 

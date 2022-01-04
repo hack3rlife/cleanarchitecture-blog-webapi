@@ -4,6 +4,7 @@ using LoremNET;
 using Moq;
 using System;
 using System.Threading.Tasks;
+using BlogWebApi.Application.Exceptions;
 using Xunit;
 
 namespace Application.UnitTest.Services.PostService
@@ -38,20 +39,20 @@ namespace Application.UnitTest.Services.PostService
             MockPostRepository.Verify(mock => mock.AddAsync(It.IsAny<Post>()), Times.Once);
         }
 
-        [Fact(DisplayName = "Add_NullPost_ThrowsArgumentNullException")]
-        public async Task Add_NullPost_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Add_NullPost_ThrowsBadRequestException")]
+        public async Task Add_NullPost_ThrowsBadRequestException()
         {
             //Arrange
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Add(null));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Add(null));
 
             //Assert
-            Assert.Equal("The post cannot be null. (Parameter 'post')", exception.Message);
+            Assert.Equal("The post cannot be null.", exception.Message);
         }
 
-        [Fact(DisplayName = "Add_PostWithEmptyOrNullName_ThrowsArgumentNullException")]
-        public async Task Add_PostWithEmptyName_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Add_PostWithEmptyOrNullName_ThrowsBadRequestException")]
+        public async Task Add_PostWithEmptyName_ThrowsBadRequestException()
         {
             //Arrange
             var postId = Guid.NewGuid();
@@ -75,16 +76,16 @@ namespace Application.UnitTest.Services.PostService
             await MockPostRepository.MockSetupAddAsync(newPost);
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Add(newDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Add(newDto));
 
             //Assert
-            Assert.Equal("The post name cannot be null or empty. (Parameter 'PostName')", exception.Message);
+            Assert.Equal("The post name cannot be null or empty.", exception.Message);
 
             MockPostRepository.Verify(mock => mock.AddAsync(newPost), Times.Never);
         }
 
-        [Fact(DisplayName = "Add_PostWithEmptyOrNullName_ThrowsArgumentOutOfRangeException")]
-        public async Task Add_PostWithEmptyOrNullName_ThrowsArgumentOutOfRangeException()
+        [Fact(DisplayName = "Add_PostWithEmptyOrNullName_ThrowsBadRequestException")]
+        public async Task Add_PostWithEmptyOrNullName_ThrowsBadRequestException()
         {
             //Arrange
             var postId = Guid.NewGuid();
@@ -111,16 +112,16 @@ namespace Application.UnitTest.Services.PostService
             await MockPostRepository.MockSetupAddAsync(newPost);
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => await PostService.Add(newDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Add(newDto));
 
             //Assert
-            Assert.Equal("The post name cannot be longer than 255 characters. (Parameter 'PostName')", exception.Message);
+            Assert.Equal("The post name cannot be longer than 255 characters.", exception.Message);
 
             MockPostRepository.Verify(mock => mock.AddAsync(newPost), Times.Never);
         }
 
-        [Fact(DisplayName = "Add_PostWithEmptyOrNullText_ThrowsArgumentNullException")]
-        public async Task Add_PostWithEmptyOrNullText_ThrowsArgumentNullException()
+        [Fact(DisplayName = "Add_PostWithEmptyOrNullText_ThrowsBadRequestException")]
+        public async Task Add_PostWithEmptyOrNullText_ThrowsBadRequestException()
         {
             //Arrange
             var postId = Guid.NewGuid();
@@ -144,16 +145,18 @@ namespace Application.UnitTest.Services.PostService
             await MockPostRepository.MockSetupAddAsync(newPost);
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Add(newDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Add(newDto));
 
             //Assert
-            Assert.Equal("The post text cannot be null or empty. (Parameter 'Text')", exception.Message);
+            Assert.Equal("The post text cannot be null or empty.", exception.Message);
 
             MockPostRepository.Verify(mock => mock.AddAsync(newPost), Times.Never);
         }
 
-        [Fact(DisplayName = "Add_PostWithEmptyOrNullBlogId_ThrowsArgumentNullException")]
-        public async Task Add_PostWithEmptyOrNullBlogId_ThrowsArgumentNullException()
+        [Theory(DisplayName = "Add_PostWithEmptyOrNullBlogId_ThrowsBadRequestException")]
+        [InlineData("00000000-0000-0000-0000-000000000000")]
+        [InlineData(null)]
+        public async Task Add_PostWithEmptyOrNullBlogId_ThrowsBadRequestException(Guid guid)
         {
             //Arrange
             var postId = Guid.NewGuid();
@@ -165,6 +168,7 @@ namespace Application.UnitTest.Services.PostService
                 PostId = postId,
                 PostName = postName,
                 Text = text,
+                BlogId = guid
             };
 
             var newDto = new PostAddRequestDto
@@ -177,38 +181,12 @@ namespace Application.UnitTest.Services.PostService
             await MockPostRepository.MockSetupAddAsync(newPost);
 
             //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Add(newDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await PostService.Add(newDto));
 
             //Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'BlogId')", exception.Message);
+            Assert.Equal("The blogId cannot be empty Guid.", exception.Message);
 
             MockPostRepository.Verify(mock => mock.AddAsync(newPost), Times.Never);
-        }
-
-        [Fact(DisplayName = "Add_PostWithLongName_ThrowsArgumentNullException")]
-        public async Task Add_PostWithEmptyOrNullBlogId_ThrowsArgumentOutOfRangeException()
-        {
-            //Arrange
-            var postId = Guid.NewGuid();
-            var postName = Lorem.Words(10);
-            var text = Lorem.Sentence(10);
-
-            var newDto = new PostAddRequestDto
-            {
-                PostId = postId,
-                PostName = postName,
-                Text = text
-            };
-
-            await MockPostRepository.MockSetupAddAsync(new Post());
-
-            //Act
-            var exception = await Assert.ThrowsAsync<ArgumentNullException>(async () => await PostService.Add(newDto));
-
-            //Assert
-            Assert.Equal("The blogId cannot be empty Guid. (Parameter 'BlogId')", exception.Message);
-
-            MockPostRepository.Verify(mock => mock.AddAsync(It.IsAny<Post>()), Times.Never);
         }
     }
 }
