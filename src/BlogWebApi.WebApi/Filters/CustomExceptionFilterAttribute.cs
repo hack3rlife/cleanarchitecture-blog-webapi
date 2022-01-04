@@ -40,20 +40,6 @@ namespace BlogWebApi.WebApi.Filters
             HandleUnknownException(context);
         }
 
-        private void HandleValidationException(ExceptionContext context)
-        {
-            var exception = context.Exception as ApplicationValidationException;
-
-            var details = new ValidationProblemDetails(exception?.Errors)
-            {
-                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-            };
-
-            context.Result = new BadRequestObjectResult(details);
-
-            context.ExceptionHandled = true;
-        }
-
         private void HandleBadRequestException(ExceptionContext context)
         {
             var exception = context.Exception as BadRequestException;
