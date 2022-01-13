@@ -6,11 +6,15 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
-WORKDIR /src
+WORKDIR /tmp
 COPY ["src/BlogWebApi.WebApi/BlogWebApi.WebApi.csproj", "src/BlogWebApi.WebApi/"]
+COPY ["src/BlogWebApi.Application/BlogWebApi.Application.csproj", "src/BlogWebApi.Application/"]
+COPY ["src/BlogWebApi.Domain/BlogWebApi.Domain.csproj", "src/BlogWebApi.Domain/"]
+COPY ["src/BlogWebApi.Infrastructure/BlogWebApi.Infrastructure.csproj", "src/BlogWebApi.Infrastructure/"]
 RUN dotnet restore "src/BlogWebApi.WebApi/BlogWebApi.WebApi.csproj"
+
 COPY . .
-WORKDIR "/src/src/BlogWebApi.WebApi"
+WORKDIR "/tmp/src/BlogWebApi.WebApi"
 RUN dotnet build "BlogWebApi.WebApi.csproj" -c Release -o /app/build
 
 FROM build AS publish

@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  blogwebapi.webapi:
+    image: hack3rlife
+    container_name: webapi
+    build:
+      context: .
+      dockerfile: src/BlogWebApi.WebApi/Dockerfile

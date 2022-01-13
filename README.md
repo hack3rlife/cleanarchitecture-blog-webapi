@@ -5,6 +5,13 @@
 # Clean Architecture with .NET Core Web API 
 Clean Architecture Pattern with .NET Core Web API.  Swagger docs can be found [here](http://webapiblog.azurewebsites.net/index.html)
 
+# Getting started
+# Certificate Installation
+```
+dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p P@ssW0rd!
+dotnet dev-certs https --trust
+```
+
 # How the code is organized
 The solution is organized in the following way
 
