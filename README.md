@@ -3,7 +3,12 @@
 [![Azure Deployment Status](https://hack3rlife.visualstudio.com/Github/_apis/build/status/hack3rlife.cleanarchitecture-blog-azure?branchName=main&label=Azure-Deployment)](https://hack3rlife.visualstudio.com/Github/_build/latest?definitionId=5&branchName=main)
 
 # Clean Architecture with .NET Core Web API 
-Clean Architecture Pattern with .NET Core Web API.  Swagger docs can be found [here](http://webapiblog.azurewebsites.net/index.html)
+Clean Architecture Pattern with .NET Core Web API. BlogWebApi specs can be found [here](http://webapiblog.azurewebsites.net/index.html)
+
+# Getting Started
+1. Install the latest version of .NET Core SDK [.NET Core 3.1](https://dotnet.microsoft.com/en-us/download/dotnet/3.1)
+1. Install the latest version of Visual Studio [Download](https://visualstudio.microsoft.com/downloads/) 
+1. Install the latest version of Docker [Docker Desktop](https://www.docker.com/products/docker-desktop)
 
 # How the code is organized
 The solution is organized in the following way
@@ -29,7 +34,6 @@ The solution is organized in the following way
             | - Infrastructure.IntegrationTests
 
             | - WebApi.EndToEndTests
-
 
 ## Domain Project
 This project will include Domain Models, Interfaces that will be implemented by the outside layers, enums, etc., specific to the domain logic.  This project should not have any dependecy to another project since it is the core of the project.
@@ -63,3 +67,42 @@ This is the entry point of our application and it depends on the Application and
 * Controllers (e.g.: `BlogsController`)
 * Startup
 * Program 
+
+# Build and Test
+## Visual Studio
+1. Start debugging using Visual Studio (F5)
+
+## .NET CLI
+1. From the root directory, execute the following commands
+```
+cd src\BlogWebApi.WebApi
+```
+1. Build the project
+```
+dotnet build BlogWebApi.WebApi.csproj
+```
+1. Run the project
+```
+dotnet run BlogWebApi.WebApi.csproj
+```
+
+
+## Docker Compose
+1.From the root folder, execute the following command:
+```
+docker-compose -f docker-compose.yml -f docker-compose.override.yml -p BlogWebApi up --build --remove-orphans --abort-on-container-exit
+```
+
+### Certificate Installation
+
+#### Windows
+```
+dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p P@ssW0rd!
+dotnet dev-certs https --trust
+```
+
+#### MacOS
+```
+dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p P@ssW0rd!
+dotnet dev-certs https --trust
+```
