@@ -9,5 +9,11 @@ namespace BlogWebApi.Domain.Interfaces
         /// </summary>
         /// <returns>The Service <see cref="Status"/></returns>
         Task<Status> GetStatusAsync();
+
+        /// <summary>
+        /// Insert Service Status when service starts
+        /// </summary>
+        /// <returns></returns>
+        Task UpsertStatusAsync();
     }
 }

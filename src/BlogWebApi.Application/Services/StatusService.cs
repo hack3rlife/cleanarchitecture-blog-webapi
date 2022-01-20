@@ -3,6 +3,7 @@ using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Domain.Interfaces;
 using System.Threading.Tasks;
 using BlogWebApi.Domain;
+using System;
 
 namespace BlogWebApi.Application.Services
 {
@@ -20,6 +21,11 @@ namespace BlogWebApi.Application.Services
             var status = await _statusRepository.GetStatusAsync();
 
             return StatusResponse(status);
+        }       
+
+        public async Task SetStatusAsync()
+        {
+            await _statusRepository.UpsertStatusAsync();
         }
 
         private static StatusResponse StatusResponse(Status status)
@@ -30,6 +36,8 @@ namespace BlogWebApi.Application.Services
                 OsVersion = status.OsVersion,
                 Server = status.Server,
                 Started = status.Started,
+                ProcessorCount = status.ProcessorCount,
+                ElapsedTime = (int)(Environment.TickCount64 / 86400000)  // Days
             };
         }
     }
