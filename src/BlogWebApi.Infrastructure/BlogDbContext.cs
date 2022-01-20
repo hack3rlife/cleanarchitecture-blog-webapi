@@ -6,6 +6,8 @@ namespace BlogWebApi.Infrastructure
 {
     public class BlogDbContext : DbContext
     {
+        private readonly ILogger<BlogDbContext> _logger;
+
         public virtual DbSet<Status> Status { get; set; }
 
         public virtual DbSet<Blog> Blog { get; set; }
@@ -17,7 +19,6 @@ namespace BlogWebApi.Infrastructure
         {
         }
 
-        private readonly ILogger<BlogDbContext> _logger;
 
         public BlogDbContext(DbContextOptions<BlogDbContext> options, ILogger<BlogDbContext> logger)
             : base(options)
@@ -26,9 +27,10 @@ namespace BlogWebApi.Infrastructure
             SaveChangesFailed += SaveChangesFailedHandler;
 
             _logger = logger;
+
         }
 
-        private void SaveChangesFailedHandler(object? sender, SaveChangesFailedEventArgs e)
+        private void SaveChangesFailedHandler(object sender, SaveChangesFailedEventArgs e)
         {
             _logger.LogError(e.Exception, e.ToString());
 

@@ -39,19 +39,25 @@ namespace WebApi.EndToEndTests
             }
         };   
 
-        public static void SeedSampleData(IServiceProvider serviceProvider)
+        public static void SeedServiceStatusData(BlogDbContext context)
         {
-            var context = new BlogDbContext(serviceProvider.GetRequiredService<DbContextOptions<BlogDbContext>>());
-
-            // Seed, if necessary
-            if (!context.Blog.Any())
+            if (!context.Status.Any())
             {
-                context.Blog.AddRange(Blogs);
-                context.Post.AddRange(Posts);
-                context.Comment.AddRange(Comments);
-            }
+                int Major = 1;
+                int Minor = 0;
+                var ProjectStartedDate = new DateTime(year: 2021, month: 11, day: 4);
+                var DaysSinceProjectStarted = (int)((DateTime.UtcNow - ProjectStartedDate).TotalDays);
+                var MinutesSinceMidnight = (int)DateTime.UtcNow.TimeOfDay.TotalMinutes;
 
-            context.SaveChanges();
+                context.Status.Add(
+                    new Status
+                    {
+                        Started = DateTime.UtcNow.ToString("s"),
+                        Server = Environment.MachineName,
+                        OsVersion = Environment.OSVersion.ToString(),
+                        AssemblyVersion = $"{Major}.{Minor}.{DaysSinceProjectStarted}.{MinutesSinceMidnight}"
+                    });
+            }
         }
 
         public static void SeedSampleData(BlogDbContext context)
