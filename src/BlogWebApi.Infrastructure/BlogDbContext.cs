@@ -6,6 +6,8 @@ namespace BlogWebApi.Infrastructure
 {
     public class BlogDbContext : DbContext
     {
+        public virtual DbSet<Status> Status { get; set; }
+
         public virtual DbSet<Blog> Blog { get; set; }
         public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<Post> Post { get; set; }

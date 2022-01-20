@@ -8,7 +8,7 @@
     <Configurations>Debug;Release</Configurations>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
-
+	
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>BlogWebApi.WebApi.xml</DocumentationFile>
     <WarningsAsErrors>;NU1605</WarningsAsErrors>
