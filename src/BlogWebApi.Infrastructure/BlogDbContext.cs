@@ -30,7 +30,7 @@ namespace BlogWebApi.Infrastructure
 
         }
 
-        private void SaveChangesFailedHandler(object? sender, SaveChangesFailedEventArgs e)
+        private void SaveChangesFailedHandler(object sender, SaveChangesFailedEventArgs e)
         {
             _logger.LogError(e.Exception, e.ToString());
 

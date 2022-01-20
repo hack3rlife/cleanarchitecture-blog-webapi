@@ -22,7 +22,7 @@ namespace Infrastructure.IntegrationTests.Repositories
         public async Task StatusRepository_CheckStatus_Success()
         {
             // Arrange
-            var started = DateTime.UtcNow;
+            var started = DateTime.UtcNow.ToString("s");
             var server = "test-server";
             var osVersion = "test";
             var assemblyVersion = "1.0.0.0";

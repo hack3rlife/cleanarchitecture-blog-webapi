@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -12,31 +13,24 @@ namespace WebApi.EndToEndTests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder
-                .ConfigureServices(services =>
-                {
-                    var descriptor = services.FirstOrDefault(
-                        d => d.ServiceType ==
-                             typeof(DbContextOptions<BlogDbContext>));
-                    services.Remove(descriptor);
+            builder            
+                 .ConfigureServices(services =>
+                 {
+                     var descriptor = services.FirstOrDefault(d => d.ServiceType == typeof(DbContextOptions<BlogDbContext>));
 
-                })
-                .ConfigureTestServices(testServices =>
-                {
-                    testServices.AddDbContext<BlogDbContext>(options =>
-                    {
-                        options.UseInMemoryDatabase("inmemblogdb");
-                        options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                        options.EnableSensitiveDataLogging();
-                        options.EnableDetailedErrors();
-                    });
+                     services.Remove(descriptor);
 
-                    //var context = Services.GetRequiredService<BlogDbContext>();
-
-                    //BlogDbContextDataSeed.SeedSampleData(context);
-
-                });
-            //.UseStartup<Startup>(); no need to call it because it was already invoked from Program.CreateHostBuilder
+                 })
+                 .ConfigureTestServices(testServices =>
+                 {
+                     testServices.AddDbContext<BlogDbContext>(options =>
+                     {
+                         options.UseInMemoryDatabase("inmemblogdb");
+                         options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                         options.EnableSensitiveDataLogging();
+                         options.EnableDetailedErrors();
+                     });
+                 });
         }
     }
 }

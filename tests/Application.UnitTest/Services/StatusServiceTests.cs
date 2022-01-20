@@ -30,7 +30,9 @@ namespace Application.UnitTest.Services
                 AssemblyVersion = "TheAssemblyVersion",
                 OsVersion = "OsVersion",
                 Server = "TheServerName",
-                Started = DateTime.UtcNow
+                Started = DateTime.UtcNow.ToString("s"),
+                ProcessorCount = 1,
+                ElapsedTime = 1
             };
 
             _mockStatusRepository
