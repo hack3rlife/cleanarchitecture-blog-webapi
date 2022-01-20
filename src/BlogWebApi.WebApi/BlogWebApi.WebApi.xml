@@ -59,12 +59,6 @@
             <response code="400">When there is an error during the execution of the request.</response>
             <returns></returns>
         </member>
-        <member name="M:BlogWebApi.WebApi.Controllers.CleanArchitectureController.Get">
-            <summary>
-            Welcome controller!
-            </summary>
-            <returns>A<see cref="T:System.String"/> with a welcome message</returns>
-        </member>
         <member name="T:BlogWebApi.WebApi.Controllers.CommentsController">
             <summary>
             Manages Comments CRUD Actions
@@ -187,6 +181,24 @@
             <response code="204">When the post is deleted successfully.</response>
             <response code="400">When there is an error during the execution of the request.</response>
             <returns></returns>
+        </member>
+        <member name="T:BlogWebApi.WebApi.Controllers.StatusController">
+            <summary>
+            Service Status Controller
+            </summary>
+        </member>
+        <member name="M:BlogWebApi.WebApi.Controllers.StatusController.#ctor(Microsoft.Extensions.Logging.ILogger{BlogWebApi.WebApi.Controllers.StatusController},BlogWebApi.Application.Interfaces.IStatusService)">
+            <summary>
+            This constructor initializes a new StatusController using a <paramref name="logger"/> and <paramref name="statusService"/>
+            </summary>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> instance</param>
+            <param name="statusService">The <see cref="T:BlogWebApi.Application.Interfaces.IStatusService"/> instance</param>
+        </member>
+        <member name="M:BlogWebApi.WebApi.Controllers.StatusController.Get">
+            <summary>
+            Get the status of the service
+            </summary>
+            <returns>The service <see cref="T:BlogWebApi.Application.Dto.StatusResponse"/></returns>
         </member>
     </members>
 </doc>

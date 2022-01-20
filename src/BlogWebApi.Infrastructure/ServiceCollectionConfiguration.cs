@@ -1,4 +1,5 @@
 ﻿using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Domain.Interfaces;
 using BlogWebApi.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,8 @@ namespace BlogWebApi.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<IStatusRepository, StatusRepository>();
+
             services.AddScoped<IBlogRepository, BlogRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();

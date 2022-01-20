@@ -9,6 +9,8 @@ namespace BlogWebApi.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<IStatusService, StatusService>();
+
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();

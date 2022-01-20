@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using BlogWebApi.Domain;
 
@@ -47,17 +48,42 @@ namespace BlogWebApi.Infrastructure
                 context.Comment.AddRange(Comments);
             }
 
+            if (!context.Status.Any())
+            {
+                context.Status.Add(
+                    new Status
+                    {
+                        Started = DateTime.UtcNow,
+                        Server = Environment.MachineName,
+                        OsVersion = Environment.OSVersion.ToString(),
+                        AssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                    });
+
+            }
+
             context.SaveChanges();
         }
 
         public static async Task SeedSampleDataAsync(BlogDbContext context)
         {
             // Seed, if necessary
-            if (!context.Blog.Any())
+            //if (!context.Blog.Any())
+            //{
+            //    context.Blog.AddRange(Blogs);
+            //    context.Post.AddRange(Posts);
+            //    context.Comment.AddRange(Comments);
+            //}
+
+            if (!context.Status.Any())
             {
-                context.Blog.AddRange(Blogs);
-                context.Post.AddRange(Posts);
-                context.Comment.AddRange(Comments);
+                await context.Status.AddAsync(
+                    new Status
+                    {
+                        Started = DateTime.UtcNow,
+                        Server = Environment.MachineName,
+                        OsVersion = Environment.OSVersion.ToString(),
+                        AssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                    });
             }
 
             await context.SaveChangesAsync();
