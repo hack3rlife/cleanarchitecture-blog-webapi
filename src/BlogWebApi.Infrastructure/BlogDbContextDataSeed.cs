@@ -50,15 +50,20 @@ namespace BlogWebApi.Infrastructure
 
             if (!context.Status.Any())
             {
+                int Major = 1;
+                int Minor = 0;
+                var ProjectStartedDate = new DateTime(year: 2021, month: 11, day: 4);
+                var DaysSinceProjectStarted = (int)((DateTime.UtcNow - ProjectStartedDate).TotalDays);
+                var MinutesSinceMidnight = (int)DateTime.UtcNow.TimeOfDay.TotalMinutes;
+
                 context.Status.Add(
                     new Status
                     {
                         Started = DateTime.UtcNow,
                         Server = Environment.MachineName,
                         OsVersion = Environment.OSVersion.ToString(),
-                        AssemblyVersion = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+                        AssemblyVersion = $"{Major}.{Minor}.{DaysSinceProjectStarted}.{MinutesSinceMidnight}"
                     });
-
             }
 
             context.SaveChanges();

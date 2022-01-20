@@ -8,13 +8,6 @@
     <Configurations>Debug;Release</Configurations>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
-  
-	<PropertyGroup>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	<TransformOnBuild>true</TransformOnBuild>
-	<OverwriteReadOnlyOutputFiles>true</OverwriteReadOnlyOutputFiles>
-	<TransformOutOfDateOnly>false</TransformOutOfDateOnly>
-  </PropertyGroup>
 	
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>BlogWebApi.WebApi.xml</DocumentationFile>
@@ -43,22 +36,6 @@
     <None Update="BlogWebApi.WebApi.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Properties\AssemblyInfo.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfo.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\AssemblyInfo.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>AssemblyInfo.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
 </Project>
