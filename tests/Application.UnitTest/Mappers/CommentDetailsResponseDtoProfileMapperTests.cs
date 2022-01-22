@@ -1,4 +1,5 @@
-﻿using BlogWebApi.Application.Mappers;
+﻿
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using LoremNET;
 using System;
@@ -6,7 +7,7 @@ using Xunit;
 
 namespace Application.UnitTest.Mappers
 {
-    public class CommentDetailsResponseMapperTests
+    public class CommentDetailsResponseDtoProfileMapperTests : ProfileMapperTestBase
     {
         [Fact]
         public void CommentDetailsResponseMapper_MapToCommentDetailsResponseDto_Success()
@@ -25,7 +26,7 @@ namespace Application.UnitTest.Mappers
             };
 
             // Act
-            var commentDetailsResponseDto = CommentDetailsResponseMapper.Map(comment);
+            var commentDetailsResponseDto = _mapper.Map<CommentDetailsResponseDto>(comment);
 
             // Assert
             Assert.Equal(comment.PostId, commentDetailsResponseDto.PostId);
@@ -36,19 +37,6 @@ namespace Application.UnitTest.Mappers
             Assert.Equal(comment.UpdatedBy, commentDetailsResponseDto.UpdatedBy);
             Assert.Equal(comment.CreatedDate, commentDetailsResponseDto.CreatedDate);
             Assert.Equal(comment.LastUpdate, commentDetailsResponseDto.LastUpdate);
-        }
-
-        [Fact]
-        public void CommentDetailsResponseMapper_MapToCommentDetailsResponseDto_ReturnsNull()
-        {
-            // Arrange
-            Comment comment = null;
-
-            // Act
-            var commentDetailsResponseDto = CommentDetailsResponseMapper.Map(comment);
-
-            // Assert
-            Assert.Null(commentDetailsResponseDto);
         }
     }
 }

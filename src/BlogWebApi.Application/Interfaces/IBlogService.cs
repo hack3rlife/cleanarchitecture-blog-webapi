@@ -20,7 +20,7 @@ namespace BlogWebApi.Application.Interfaces
         /// </summary>
         /// <param name="blogId"></param>
         /// <returns></returns>
-        Task<BlogByIdResponseDto> GetBy(Guid blogId);
+        Task<BlogResponseDto> GetBy(Guid blogId);
 
         /// <summary>
         /// Get a single blogs with post details

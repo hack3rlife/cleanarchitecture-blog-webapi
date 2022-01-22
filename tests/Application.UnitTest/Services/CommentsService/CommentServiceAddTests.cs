@@ -1,29 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Application.UnitTest.Builders;
-using Application.UnitTest.Mocks;
-using BlogWebApi.Application.Dto;
+﻿using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
-using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Application.Services;
 using BlogWebApi.Domain;
 using LoremNET;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services.CommentsService
 {
-    public class CommentServiceAddTests
+    public class CommentServiceAddTests : CommentServiceBase
     {
-        private readonly MockCommentsRepository _mockCommentRepository;
-        private readonly ICommentService _commentService;
-
-        public CommentServiceAddTests()
-        {
-            _mockCommentRepository = new MockCommentsRepository();
-            _commentService = new CommentService(_mockCommentRepository.Object);
-        }
-
         [Fact(DisplayName = "Add_Comment_IsCalledOnce")]
         public async Task Add_Comment_IsCalledOnce()
         {

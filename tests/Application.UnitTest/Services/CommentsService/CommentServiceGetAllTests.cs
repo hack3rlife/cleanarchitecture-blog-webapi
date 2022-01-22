@@ -1,6 +1,4 @@
-﻿using Application.UnitTest.Mocks;
-using BlogWebApi.Application.Services;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Domain;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,20 +6,8 @@ using Xunit;
 
 namespace Application.UnitTest.Services.CommentsService
 {
-    public class CommentServiceGetAllTests
+    public class CommentServiceGetAllTests: CommentServiceBase 
     {
-        private readonly MockCommentsRepository _mockCommentRepository;
-        private readonly CommentService _commentService;
-
-        private const int skip = 0; //default pagination value
-        private const int take = 10; //default pagination value
-
-        public CommentServiceGetAllTests()
-        {
-            _mockCommentRepository = new MockCommentsRepository();
-            _commentService = new CommentService(_mockCommentRepository.Object);
-        }
-
         [Fact(DisplayName = "GetAll_WithoutPagingValues_UsesDefaultPagingValues")]
         public async Task GetAll_WithoutPagingValues_UsesDefaultPagingValues()
         {

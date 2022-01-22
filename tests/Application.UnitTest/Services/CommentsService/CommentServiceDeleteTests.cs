@@ -1,26 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using Application.UnitTest.Builders;
-using Application.UnitTest.Mocks;
+﻿using Application.UnitTest.Builders;
 using BlogWebApi.Application.Exceptions;
-using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Application.Services;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services.CommentsService
 {
-    public class CommentServiceDeleteTests
+    public class CommentServiceDeleteTests : CommentServiceBase
     {
-        private readonly MockCommentsRepository _mockCommentRepository;
-        private readonly ICommentService _commentService;
-
-        public CommentServiceDeleteTests()
-        {
-            _mockCommentRepository = new  MockCommentsRepository();
-            _commentService = new CommentService(_mockCommentRepository.Object);
-        }
-
         [Fact(DisplayName = "Delete_Comment_IsCalledOnce")]
         public async Task Delete_Comment_IsCalledOnce()
         {

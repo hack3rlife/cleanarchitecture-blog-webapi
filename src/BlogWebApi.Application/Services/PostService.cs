@@ -1,7 +1,8 @@
-﻿using BlogWebApi.Application.Dto;
+﻿using AutoMapper;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Application.Mappers;
+using BlogWebApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,17 +12,19 @@ namespace BlogWebApi.Application.Services
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
+        private readonly IMapper _mapper;
 
-        public PostService(IPostRepository postRepository)
+        public PostService(IPostRepository postRepository, IMapper mapper)
         {
             _postRepository = postRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<PostResponseDto>> GetAll(int skip = 0, int take = 10)
         {
             var posts = await _postRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
 
-            return PostResponseMapper.Map(posts);
+            return _mapper.Map<IEnumerable<PostResponseDto>>(posts);
         }
 
         public Task<PostDetailsResponseDto> GetBy(Guid postId)
@@ -36,7 +39,7 @@ namespace BlogWebApi.Application.Services
         {
             var post = await _postRepository.GetByIdAsync(postId);
 
-            return PostDetailsResponseMapper.Map(post);
+            return _mapper.Map<PostDetailsResponseDto>(post);
         }
 
         public async Task<PostDetailsResponseDto> GetCommentsBy(Guid postId, int skip, int take)
@@ -46,7 +49,7 @@ namespace BlogWebApi.Application.Services
 
             var post = await _postRepository.GetByIdWithCommentsAsync(postId, skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
 
-            return PostDetailsResponseMapper.Map(post);
+            return _mapper.Map<PostDetailsResponseDto>(post);
         }
 
         public Task<PostResponseDto> Add(PostAddRequestDto post)
@@ -73,9 +76,9 @@ namespace BlogWebApi.Application.Services
 
         private async Task<PostResponseDto> AddInternal(PostAddRequestDto postAddRequestDto)
         {
-            var post = PostAddRequestMapper.Map(postAddRequestDto);
+            var post = _mapper.Map<Post>(postAddRequestDto);
 
-            return PostResponseMapper.Map(await _postRepository.AddAsync(post));
+            return _mapper.Map<PostResponseDto>(await _postRepository.AddAsync(post));
         }
 
         public Task Update(PostUpdateRequestDto post)
@@ -112,7 +115,7 @@ namespace BlogWebApi.Application.Services
                 throw new NotFoundException(nameof(postUpdateRequestDto.PostId), postUpdateRequestDto.PostId);
             }
 
-            oldPost = PostUpdateRequestMapper.Map(postUpdateRequestDto);
+            oldPost = _mapper.Map<Post>(postUpdateRequestDto);
 
             await _postRepository.UpdateAsync(oldPost);
         }

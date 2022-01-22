@@ -1,4 +1,5 @@
-﻿using BlogWebApi.Application.Mappers;
+﻿
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using LoremNET;
 using System;
@@ -8,7 +9,7 @@ using Xunit;
 
 namespace Application.UnitTest.Mappers
 {
-    public class CommentResponseMapperTests
+    public class CommentResponseDtoProfileMapperTests : ProfileMapperTestBase
     {
         [Fact]
         public void CommentResponseMapper_MapFromComment_Success()
@@ -27,7 +28,7 @@ namespace Application.UnitTest.Mappers
             };
 
             // Act
-            var commentResponseDto = CommentResponseMapper.Map(comment);
+            var commentResponseDto = _mapper.Map<CommentResponseDto>(comment);
 
             // Assert
             Assert.Equal(comment.CommentId, commentResponseDto.CommentId);
@@ -35,18 +36,6 @@ namespace Application.UnitTest.Mappers
             Assert.Equal(comment.PostId, commentResponseDto.PostId);
         }
 
-        [Fact]
-        public void CommentResponseMapper_MapFromNullComment_ReturnsNull()
-        {
-            // Arrange
-            Comment comment = null;
-
-            // Act
-            var commentResponseDto = CommentResponseMapper.Map(comment);
-
-            // Assert
-            Assert.Null(commentResponseDto);
-        }
 
         [Fact]
         public void CommentResponseMapper_MapFromComments_Success()
@@ -79,7 +68,7 @@ namespace Application.UnitTest.Mappers
             };
 
             // Act
-            var commentResponseDto = CommentResponseMapper.Map(comments).ToList();
+            var commentResponseDto = _mapper.Map<IEnumerable<CommentResponseDto>>(comments).ToList();
 
             // Assert
             Assert.Collection(commentResponseDto,
@@ -94,19 +83,6 @@ namespace Application.UnitTest.Mappers
                     Assert.Equal(item.CommentName, comments[1].CommentName);
                     Assert.Equal(item.CommentId, comments[1].CommentId);
                 });
-        }
-
-        [Fact]
-        public void CommentResponseMapper_MapFromNullComments_Success()
-        {
-            // Arrange
-            List<Comment> comments = null;
-
-            // Act
-            var commentResponseDto = CommentResponseMapper.Map(comments)?.ToList();
-
-            // Assert
-            Assert.Null(comments);
         }
     }
 }

@@ -54,7 +54,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BlogByIdResponseDto>> Get(Guid guid, [FromQuery] int skip = 0, int take = 10)
+        public async Task<ActionResult<BlogResponseDto>> Get(Guid guid, [FromQuery] int skip = 0, int take = 10)
         {
             var blog = await _blogService.GetPostsBy(guid, skip, take);
 

@@ -33,7 +33,7 @@ namespace WebApi.EndToEndTests.Controllers.Comments
                     Encoding.UTF8,
                     "application/json"));
 
-            var blog = JsonConvert.DeserializeObject<BlogByIdResponseDto>(await blogResponseMessage.Content.ReadAsStringAsync());
+            var blog = JsonConvert.DeserializeObject<BlogResponseDto>(await blogResponseMessage.Content.ReadAsStringAsync());
 
             var newPost = new PostAddRequestDto
             {

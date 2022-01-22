@@ -1,7 +1,7 @@
-﻿using BlogWebApi.Application.Dto;
+﻿using AutoMapper;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Application.Mappers;
 using BlogWebApi.Domain;
 using System;
 using System.Collections.Generic;
@@ -12,21 +12,23 @@ namespace BlogWebApi.Application.Services
     public class BlogService : IBlogService
     {
         private readonly IBlogRepository _blogRepository;
+        private readonly IMapper _mapper;
 
-        public BlogService(IBlogRepository blogRepository)
+        public BlogService(IBlogRepository blogRepository, IMapper mapper)
         {
             _blogRepository = blogRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<BlogDetailsResponseDto>> GetAll(int skip = 0, int take = 10)
         {
             var blogs = await _blogRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
 
-            return BlogMapper.ToBlogCollectionResponse(blogs);
+            return _mapper.Map<IEnumerable<BlogDetailsResponseDto>>(blogs);
             
         }
 
-        public Task<BlogByIdResponseDto> GetBy(Guid blogId)
+        public Task<BlogResponseDto> GetBy(Guid blogId)
         {
             if (blogId == Guid.Empty)
                 throw new BadRequestException( $"The {nameof(blogId)} cannot be empty Guid.");
@@ -34,11 +36,11 @@ namespace BlogWebApi.Application.Services
             return  GetByInternal(blogId);
         }
 
-        private async Task<BlogByIdResponseDto> GetByInternal(Guid blogId)
+        private async Task<BlogResponseDto> GetByInternal(Guid blogId)
         {
             var blog = await _blogRepository.GetByIdAsync(blogId);
 
-            return BlogMapper.ToBlogByIdResponseDto(blog);
+            return _mapper.Map<BlogResponseDto>(blog);
         }
 
         public Task<BlogDetailsResponseDto> GetPostsBy(Guid blogId, int skip = 0, int take = 10)
@@ -53,7 +55,7 @@ namespace BlogWebApi.Application.Services
         {
             var blog = await _blogRepository.GetByIdWithPostsAsync(blogId, skip, take);
 
-            return BlogMapper.ToBlogResponse(blog);
+            return _mapper.Map<BlogDetailsResponseDto>(blog);
         }
 
         public Task<BlogDetailsResponseDto> Add(BlogAddRequestDto blogAddRequestDto)
@@ -70,7 +72,7 @@ namespace BlogWebApi.Application.Services
                 throw new BadRequestException("The blog name cannot be longer than 255 characters.");
             }
 
-            var blog = BlogMapper.FromBlogAddRequestDto(blogAddRequestDto);
+            var blog = _mapper.Map<Blog>(blogAddRequestDto);
 
             return AddInternal(blog);
         }
@@ -79,7 +81,7 @@ namespace BlogWebApi.Application.Services
         {
             var newPost = await _blogRepository.AddAsync(blog);
 
-            return BlogMapper.ToBlogResponse(newPost);
+            return _mapper.Map<BlogDetailsResponseDto>(newPost);
         }
 
         public Task Update(BlogUpdateRequestDto blog)
