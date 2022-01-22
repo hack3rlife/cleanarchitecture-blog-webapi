@@ -1,5 +1,7 @@
 ﻿using Application.UnitTest.Mocks;
+using AutoMapper;
 using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Application.Profiles;
 
 namespace Application.UnitTest.Services.PostService
 {
@@ -13,8 +15,12 @@ namespace Application.UnitTest.Services.PostService
 
         public PostServiceBase()
         {
+            var configurationProvider = new MapperConfiguration(cfg => { cfg.AddProfile<ProfileMapper>(); });
+
+            var mapper = configurationProvider.CreateMapper();
             MockPostRepository = new MockPostsRepository();
-            PostService = new BlogWebApi.Application.Services.PostService(MockPostRepository.Object);
+
+            PostService = new BlogWebApi.Application.Services.PostService(MockPostRepository.Object, mapper);
         }
     }
 }

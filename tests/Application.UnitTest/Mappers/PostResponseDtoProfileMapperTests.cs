@@ -1,4 +1,5 @@
-﻿using BlogWebApi.Application.Mappers;
+﻿
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
 using LoremNET;
 using System;
@@ -7,7 +8,7 @@ using Xunit;
 
 namespace Application.UnitTest.Mappers
 {
-    public class PostResponseMapperTests
+    public class PostResponseDtoProfileMapperTests : ProfileMapperTestBase
     {
         [Fact]
         public void PostResponseMapper_MapToPostResponseDto_Success()
@@ -21,25 +22,12 @@ namespace Application.UnitTest.Mappers
             };
 
             // Arrange
-            var postResponseDto = PostResponseMapper.Map(post);
+            var postResponseDto = _mapper.Map<PostResponseDto>(post);
 
             // Assert 
             Assert.Equal(post.BlogId, postResponseDto.BlogId);
             Assert.Equal(post.PostId, postResponseDto.PostId);
             Assert.Equal(post.PostName, postResponseDto.PostName);
-        }
-
-        [Fact]
-        public void PostResponseMapper_WhenPostIsNull_ReturnsNullPostResponseDto()
-        {
-            // Act
-            Post post = null;
-
-            // Arrange
-            var postResponseDto = PostResponseMapper.Map(post);
-
-            // Assert 
-            Assert.Null(postResponseDto);
         }
 
         [Fact]
@@ -65,7 +53,7 @@ namespace Application.UnitTest.Mappers
             };
 
             // Arrange
-            var postResponseDto = PostResponseMapper.Map(posts);
+            var postResponseDto = _mapper.Map<List<PostResponseDto>>(posts);
 
             // Assert 
             Assert.Equal(posts.Count, postResponseDto.Count);
@@ -81,20 +69,6 @@ namespace Application.UnitTest.Mappers
                     Assert.Equal(posts[1].PostId, item.PostId);
                     Assert.Equal(posts[1].PostName, item.PostName);
                 });
-        }
-
-        [Fact]
-        public void PostResponseMapper_WhenPostCollectionIsNull_ReturnsNullostResponseDtoCollection()
-        {
-            // Act
-
-            List<Post> posts = null;
-
-            // Arrange
-            var postResponseDto = PostResponseMapper.Map(posts);
-
-            // Assert 
-            Assert.Null(postResponseDto);
         }
     }
 }

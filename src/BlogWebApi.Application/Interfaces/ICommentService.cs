@@ -7,7 +7,7 @@ namespace BlogWebApi.Application.Interfaces
 {
     public interface ICommentService
     {
-        Task<IEnumerable<CommentResponseDto>> GetAll(int skip, int take);
+        Task<IEnumerable<CommentResponseDto>> GetAll(int skip = 0, int take = 10);
         Task<CommentDetailsResponseDto> GetBy(Guid commentId);
         Task<CommentResponseDto> Add(CommentAddRequestDto commentAddRequestDto);
         Task Update(CommentUpdateRequestDto commentUpdateRequestDto);

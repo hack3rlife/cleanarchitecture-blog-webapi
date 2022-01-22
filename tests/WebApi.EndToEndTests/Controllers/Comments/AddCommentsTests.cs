@@ -33,7 +33,7 @@ namespace WebApi.EndToEndTests.Controllers.Comments
                     "application/json"));
             var blogContent = await blogResponseMessage.Content.ReadAsStringAsync();
 
-            var blog = JsonConvert.DeserializeObject<BlogByIdResponseDto>(blogContent);
+            var blog = JsonConvert.DeserializeObject<BlogResponseDto>(blogContent);
 
             var newPost = new PostAddRequestDto
             {

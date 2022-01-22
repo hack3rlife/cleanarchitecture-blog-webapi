@@ -1,12 +1,12 @@
 ﻿using BlogWebApi.Application.Dto;
-using BlogWebApi.Application.Mappers;
+using BlogWebApi.Domain;
 using LoremNET;
 using System;
 using Xunit;
 
 namespace Application.UnitTest.Mappers
 {
-    public class PostUpdateRequestMapperTests
+    public class PostUpdateRequestDtoProfileMapperTests : ProfileMapperTestBase
     {
         [Fact]
         public void PostUpdateRequestMapper_MapToPost_Success()
@@ -22,7 +22,7 @@ namespace Application.UnitTest.Mappers
             };
 
             // Act
-            var post = PostUpdateRequestMapper.Map(postUpdateRequestDto);
+            var post = _mapper.Map<Post>(postUpdateRequestDto);
 
             // Assert
             Assert.Equal(postUpdateRequestDto.BlogId, post.BlogId);
@@ -30,19 +30,6 @@ namespace Application.UnitTest.Mappers
             Assert.Equal(postUpdateRequestDto.PostName, post.PostName);
             Assert.Equal(postUpdateRequestDto.Text, post.Text);
             Assert.Equal(postUpdateRequestDto.UpdatedBy, post.UpdatedBy);
-        }
-
-        [Fact]
-        public void PostUpdateRequestMapper_WhenPostUpdateRequestDto_ReturnsNullPost()
-        {
-            // Arrange
-            PostUpdateRequestDto postUpdateRequestDto = null;
-
-            // Act
-            var post = PostUpdateRequestMapper.Map(postUpdateRequestDto);
-
-            // Assert
-            Assert.Null(post);
         }
     }
 }

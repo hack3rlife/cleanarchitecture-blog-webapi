@@ -1,29 +1,16 @@
-﻿using System;
-using System.Threading.Tasks;
-using Application.UnitTest.Builders;
-using Application.UnitTest.Mocks;
+﻿using Application.UnitTest.Builders;
 using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
-using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Application.Services;
-using BlogWebApi.Domain;
 using LoremNET;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services.CommentsService
 {
-    public class CommentServiceUpdateTests
+    public class CommentServiceUpdateTests : CommentServiceBase
     {
-        private readonly MockCommentsRepository _mockCommentRepository;
-        private readonly ICommentService _commentService;
-
-        public CommentServiceUpdateTests()
-        {
-            _mockCommentRepository = new MockCommentsRepository();
-            _commentService = new CommentService(_mockCommentRepository.Object);
-        }
-
         [Fact(DisplayName = "Update_Comment_IsCalledOnce")]
         public async Task Update_Comment_IsCalledOnce()
         {
@@ -65,7 +52,7 @@ namespace Application.UnitTest.Services.CommentsService
             _mockCommentRepository.MockSetupUpdateAsync();
 
             // Act
-            var exception = await Assert.ThrowsAsync<NotFoundException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<NotFoundException>(async () => await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
             Assert.Equal($"The comment: {newCommentUpdateRequestDto.CommentId} does not exist.", exception.Message);
@@ -77,7 +64,7 @@ namespace Application.UnitTest.Services.CommentsService
         public async Task Update_NullComment_ThrowsBadRequestException()
         {
             //Arrange
-           
+
             //Act
             var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Update(null));
 
@@ -101,7 +88,7 @@ namespace Application.UnitTest.Services.CommentsService
             comment.CommentId = Guid.Empty;
 
             //Act
-            var exception = await Assert.ThrowsAsync<BadRequestException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
             Assert.Equal("The commentId cannot be empty Guid.", exception.Message);
@@ -123,7 +110,7 @@ namespace Application.UnitTest.Services.CommentsService
             };
 
             //Act
-            var exception = await Assert.ThrowsAsync<BadRequestException>(async ()=> await _commentService.Update(newCommentUpdateRequestDto));
+            var exception = await Assert.ThrowsAsync<BadRequestException>(async () => await _commentService.Update(newCommentUpdateRequestDto));
 
             // Assert
             Assert.Equal("The comment name cannot be null or empty.", exception.Message);

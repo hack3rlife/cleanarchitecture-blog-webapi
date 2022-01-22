@@ -1,7 +1,8 @@
-﻿using BlogWebApi.Application.Dto;
+﻿using AutoMapper;
+using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Application.Mappers;
+using BlogWebApi.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,16 +12,18 @@ namespace BlogWebApi.Application.Services
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _commentRepository;
+        private readonly IMapper _mapper;
 
-        public CommentService(ICommentRepository commentRepository)
+        public CommentService(ICommentRepository commentRepository, IMapper mapper)
         {
             _commentRepository = commentRepository;
+            _mapper = mapper;
         }
-        public async Task<IEnumerable<CommentResponseDto>> GetAll(int skip = 0, int take = 10)
+        public async Task<IEnumerable<CommentResponseDto>> GetAll(int skip, int take)
         {
             var comments = await _commentRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
 
-            return CommentResponseMapper.Map(comments);
+            return _mapper.Map<IEnumerable<CommentResponseDto>>(comments);
         }
 
         public Task<CommentDetailsResponseDto> GetBy(Guid commentId)
@@ -35,7 +38,7 @@ namespace BlogWebApi.Application.Services
         {
             var comment = await _commentRepository.GetByIdAsync(commentId);
 
-            return CommentDetailsResponseMapper.Map(comment);
+            return _mapper.Map<CommentDetailsResponseDto>(comment);
         }
 
         public Task<CommentResponseDto> Add(CommentAddRequestDto commentAddRequestDto)
@@ -58,9 +61,9 @@ namespace BlogWebApi.Application.Services
 
         private async Task<CommentResponseDto> AddInternal(CommentAddRequestDto commentAddRequestDto)
         {
-            var newComment = await _commentRepository.AddAsync(CommentMapper.Map(commentAddRequestDto));
+            var newComment = await _commentRepository.AddAsync(_mapper.Map<Comment>(commentAddRequestDto));
 
-            return CommentResponseMapper.Map(newComment);
+            return _mapper.Map<CommentResponseDto>(newComment);
         }
 
         public Task Update(CommentUpdateRequestDto commentUpdateRequestDto)
@@ -93,7 +96,7 @@ namespace BlogWebApi.Application.Services
                 throw new NotFoundException(nameof(comment), comment.CommentId);
             }
 
-            oldComment = CommentMapper.Map(comment);
+            oldComment = _mapper.Map<Comment>(comment);
 
             await _commentRepository.UpdateAsync(oldComment);
         }

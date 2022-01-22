@@ -2,6 +2,7 @@
 using BlogWebApi.Application.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace BlogWebApi.Application
 {
@@ -9,8 +10,11 @@ namespace BlogWebApi.Application
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IStatusService, StatusService>();
+            // Automapper
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
+            // BlogWebAPI Application Services
+            services.AddScoped<IStatusService, StatusService>();
             services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();
