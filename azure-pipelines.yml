@@ -13,9 +13,8 @@ variables:
   buildConfiguration: 'Release'
   major: 1
   minor: 0
-  build: $(Build.BuildID)
-  revision: $(DayOfYear)
-  buildVersion: $(major).$(minor).$(build).$(revision)
+  patch: $(Build.BuildID).$(DayOfYear)
+  buildVersion: $(major).$(minor).$(patch)
 
 steps:
 - task: DotNetCoreCLI@2
