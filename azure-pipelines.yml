@@ -11,6 +11,10 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  major: 1
+  minor: 0
+  patch: $(Build.BuildID)
+  buildVersion: $(major).$(minor).$(patch)
 
 steps:
 - task: DotNetCoreCLI@2
@@ -22,7 +26,7 @@ steps:
   displayName: Building Solution
   inputs:
     projects: '**/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: '--configuration $(buildConfiguration) -p:Version=$(buildVersion)'
 
 - task: DotNetCoreCLI@2
   displayName: Executing Unit Testing
@@ -55,7 +59,7 @@ steps:
     publishWebProjects: false
     zipAfterPublish: true
     projects: 'src/**/BlogWebApi.WebApi.csproj'
-    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) -p:Version=$(buildVersion)'
 
 - task: PublishBuildArtifacts@1
   displayName: Publish Artifact (.zip) to drop folder
