@@ -13,7 +13,7 @@ variables:
   buildConfiguration: 'Release'
   major: 1
   minor: 0
-  patch: $(Build.BuildID).$(DayOfYear)
+  patch: $(DayOfYear) #$(Build.BuildID)
   buildVersion: $(major).$(minor).$(patch)
 
 steps:
