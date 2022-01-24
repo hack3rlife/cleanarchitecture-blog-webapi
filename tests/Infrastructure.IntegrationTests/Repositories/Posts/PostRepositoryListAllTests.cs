@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using BlogWebApi.Application.Interfaces;
+﻿using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
-using Infrastructure.IntegrationTests.Builders;
 using LoremNET;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Infrastructure.IntegrationTests.Repositories.Posts
@@ -26,18 +26,25 @@ namespace Infrastructure.IntegrationTests.Repositories.Posts
         public async Task PostRepository_ListAllPost_Success()
         {
             //Arrange
-            var newBlog = BlogBuilder.Create().Build();
+            var newBlog = new Blog
+            {
+                BlogName = Lorem.Words(10, true),
+                BlogId = Guid.NewGuid()
+            };
+
             var blog = await _blogRepository.AddAsync(newBlog);
 
             for (var i = 0; i < 10; i++)
             {
 
-                var newPost = PostBuilder.Create()
-                    .WithPostId(Guid.NewGuid())
-                    .WithName(Lorem.Words(10))
-                    .WithText(Lorem.Sentence(100))
-                    .WithBlogId(blog.BlogId)
-                    .Build();
+                var newPost = new Post
+                {
+                    PostId = Guid.NewGuid(),
+                    PostName = Lorem.Words(10),
+                    Text = Lorem.Sentence(100),
+                    BlogId = blog.BlogId,
+                };
+
                 _ = await _postRepository.AddAsync(newPost);
             }
 
@@ -53,18 +60,24 @@ namespace Infrastructure.IntegrationTests.Repositories.Posts
         public async Task PostRepository_ListAllPostWithInvalidPaginationValues_ShouldUseDefaultPaginationValues()
         {
             //Arrange
-            var newBlog = BlogBuilder.Create().Build();
+            var newBlog = new Blog
+            {
+                BlogName = Lorem.Words(10, true),
+                BlogId = Guid.NewGuid()
+            };
+
             var blog = await _blogRepository.AddAsync(newBlog);
 
             for (var i = 0; i < 15; i++)
             {
 
-                var newPost = PostBuilder.Create()
-                    .WithPostId(Guid.NewGuid())
-                    .WithName(Lorem.Words(10))
-                    .WithText(Lorem.Sentence(100))
-                    .WithBlogId(blog.BlogId)
-                    .Build();
+                var newPost = new Post
+                {
+                    PostId = Guid.NewGuid(),
+                    PostName = Lorem.Words(10),
+                    Text = Lorem.Sentence(100),
+                    BlogId = blog.BlogId,
+                };
 
                 _ = await _postRepository.AddAsync(newPost);
             }

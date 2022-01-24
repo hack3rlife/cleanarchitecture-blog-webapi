@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
-using Infrastructure.IntegrationTests.Builders;
+using LoremNET;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Infrastructure.IntegrationTests.Repositories.Blog
+namespace Infrastructure.IntegrationTests.Repositories.Blogs
 {
     [Collection("DatabaseCollectionFixture")]
     public class BlogRepositoryListAllTests
@@ -23,7 +25,11 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
             //Arrange
             for (var i = 0; i < 10; i++)
             {
-                var blog = BlogBuilder.Create().Build();
+                var blog = new Blog
+                {
+                    BlogName = Lorem.Words(10, true),
+                    BlogId = Guid.NewGuid()
+                };
                 await _blogRepository.AddAsync(blog);
             }
 
@@ -44,7 +50,11 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
             //Arrange
             for (var i = 0; i < 20; i++)
             {
-                var blog = BlogBuilder.Create().Build();
+                var blog = new Blog
+                {
+                    BlogName = Lorem.Words(10, true),
+                    BlogId = Guid.NewGuid()
+                };
                 await _blogRepository.AddAsync(blog);
             }
 

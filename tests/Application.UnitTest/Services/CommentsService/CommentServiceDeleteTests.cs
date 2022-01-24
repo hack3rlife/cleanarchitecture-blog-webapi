@@ -1,5 +1,6 @@
-﻿using Application.UnitTest.Builders;
-using BlogWebApi.Application.Exceptions;
+﻿using BlogWebApi.Application.Exceptions;
+using BlogWebApi.Domain;
+using LoremNET;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -13,7 +14,14 @@ namespace Application.UnitTest.Services.CommentsService
         public async Task Delete_Comment_IsCalledOnce()
         {
             // Arrange
-            var newComment = CommentBuilder.Default();
+            var newComment = new Comment
+            {
+                CommentId = Guid.NewGuid(),
+                CommentName = Lorem.Words(10),
+                Email = Lorem.Email(),
+                PostId = Guid.NewGuid()
+            };
+
             await _mockCommentRepository.MockSetupGetByIdAsync(newComment);
             _mockCommentRepository.MockSetupDeleteAsync();
 

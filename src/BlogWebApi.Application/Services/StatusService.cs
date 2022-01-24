@@ -30,6 +30,9 @@ namespace BlogWebApi.Application.Services
 
         private static StatusResponse StatusResponse(Status status)
         {
+            DateTime.TryParse(status.Started, out DateTime result);
+
+            var elapsedTime = DateTime.UtcNow - result;
             return new StatusResponse
             {
                 AssemblyVersion = status.AssemblyVersion,
@@ -37,7 +40,7 @@ namespace BlogWebApi.Application.Services
                 Server = status.Server,
                 Started = status.Started,
                 ProcessorCount = status.ProcessorCount,
-                ElapsedTime = (int)(Environment.TickCount64 / 86400000)  // Days
+                ElapsedTime = elapsedTime.ToString()
             };
         }
     }

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Application.UnitTest.Builders;
-using BlogWebApi.Application.Exceptions;
+﻿using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Domain;
+using LoremNET;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services.PostService
@@ -14,7 +14,13 @@ namespace Application.UnitTest.Services.PostService
         public async Task Delete_ExistingPost_IsCalledOnce()
         {
             // Arrange
-            var post = PostBuilder.Default();
+            var post = new Post
+            {
+                PostId = Guid.NewGuid(),
+                PostName = Lorem.Words(10),
+                Text = Lorem.Sentence(10),
+                BlogId = Guid.NewGuid()
+            };
 
             await MockPostRepository.MockSetupGetByIdAsync(post); 
             MockPostRepository.MockSetupDeleteAsync();

@@ -1,23 +1,31 @@
-using System;
-using System.Threading.Tasks;
-using Application.UnitTest.Builders;
 using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Domain;
 using LoremNET;
 using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services.BlogService
 {
     public class BlogServiceUpdateTests : BlogServiceBase
     {
+        private readonly Blog updateBlog;
+
+        public BlogServiceUpdateTests()
+        {
+            updateBlog = new Blog
+            {
+                BlogName = Lorem.Words(10),
+                BlogId = Guid.NewGuid()
+            };
+        }
+
         [Fact(DisplayName = "Update_BlogAnExistingBlog_ReturnsNoError")]
         public async Task Update_BlogAnExistingBlog_ReturnsNoError()
         {
             //Arrange
-            var updateBlog = BlogBuilder.Default();
-
             await MockBlogRepository.MockSetupGetByIdAsync(updateBlog);
             MockBlogRepository.MockSetupUpdateAsync();
 
@@ -38,8 +46,6 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Update_NonExistentBlog_NotFoundException()
         {
             //Arrange
-            var updateBlog = BlogBuilder.Default();
-
             await MockBlogRepository.MockSetupGetByIdAsync(null);
             MockBlogRepository.MockSetupUpdateAsync();
 
@@ -77,15 +83,9 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Update_WithEmptyBlogId_ThrowsBadRequestException()
         {
             //Arrange
-            var updateBlog = new Blog
-            {
-                BlogId = Guid.Empty,
-                BlogName = "UpdateBlog"
-            };
-
             var updateRequestDto = new BlogUpdateRequestDto
             {
-                BlogId = updateBlog.BlogId,
+                BlogId = Guid.Empty,
                 BlogName = updateBlog.BlogName
             };
 
@@ -104,11 +104,15 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Update_WithEmptyOrNullName_ThrowsBadRequestException(string name)
         {
             //Arrange
-            var blog = BlogBuilder.DefaultForBlogUpdateRequestDto();
-            blog.BlogName = name;
+            var blogUpdateRequesteDto = new BlogUpdateRequestDto
+            {
+                BlogName = Lorem.Words(10),
+                BlogId = Guid.NewGuid()
+            };
+            blogUpdateRequesteDto.BlogName = name;
 
             // Act
-            async Task Act() => await BlogService.Update(blog);
+            async Task Act() => await BlogService.Update(blogUpdateRequesteDto);
             var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
 
             // Assert
@@ -120,11 +124,15 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Update_BlogWithLongBlogName_ThrowsBadRequestException()
         {
             //Arrange
-            var blog = BlogBuilder.DefaultForBlogUpdateRequestDto();
-            blog.BlogName = Lorem.Words(255);
+            var blogUpdateRequesteDto = new BlogUpdateRequestDto
+            {
+                BlogName = Lorem.Words(10),
+                BlogId = Guid.NewGuid()
+            };
+            blogUpdateRequesteDto.BlogName = Lorem.Words(255);
 
             //Act
-            async Task Act() => await BlogService.Update(blog);
+            async Task Act() => await BlogService.Update(blogUpdateRequesteDto);
             var exception = await Assert.ThrowsAsync<BadRequestException>(Act);
 
             //Assert

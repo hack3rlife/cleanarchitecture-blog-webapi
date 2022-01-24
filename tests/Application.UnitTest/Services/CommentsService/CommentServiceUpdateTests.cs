@@ -1,6 +1,6 @@
-﻿using Application.UnitTest.Builders;
-using BlogWebApi.Application.Dto;
+﻿using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
+using BlogWebApi.Domain;
 using LoremNET;
 using Moq;
 using System;
@@ -24,7 +24,14 @@ namespace Application.UnitTest.Services.CommentsService
                 Email = Lorem.Email()
             };
 
-            var newComment = CommentBuilder.Default();
+            var newComment = new Comment
+            {
+                CommentId = Guid.NewGuid(),
+                CommentName = Lorem.Words(10),
+                Email = Lorem.Email(),
+                PostId = Guid.NewGuid()
+            };
+
             await _mockCommentRepository.MockSetupGetByIdAsync(newComment);
             _mockCommentRepository.MockSetupUpdateAsync();
 
@@ -84,7 +91,13 @@ namespace Application.UnitTest.Services.CommentsService
                 Email = Lorem.Email()
             };
 
-            var comment = CommentBuilder.Default();
+            var comment = new Comment
+            {
+                CommentId = Guid.NewGuid(),
+                CommentName = Lorem.Words(10),
+                Email = Lorem.Email(),
+                PostId = Guid.NewGuid()
+            };
             comment.CommentId = Guid.Empty;
 
             //Act

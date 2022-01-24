@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using BlogWebApi.Application.Interfaces;
+﻿using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
-using Infrastructure.IntegrationTests.Builders;
 using LoremNET;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Infrastructure.IntegrationTests.Repositories.Comments
@@ -29,15 +28,21 @@ namespace Infrastructure.IntegrationTests.Repositories.Comments
         public async Task CommentRepository_UpdateComment_Success()
         {
             //Arrange
-            var newBlog = BlogBuilder.Create().Build();
+            var newBlog = new Blog
+            {
+                BlogName = Lorem.Words(10, true),
+                BlogId = Guid.NewGuid()
+            };
+
             var blog = await _blogRepository.AddAsync(newBlog);
 
-            var newPost = PostBuilder.Create()
-                .WithPostId(Guid.NewGuid())
-                .WithName(Lorem.Words(10))
-                .WithText(Lorem.Sentence(100))
-                .WithBlogId(blog.BlogId)
-                .Build();
+            var newPost = new Post
+            {
+                PostId = Guid.NewGuid(),
+                PostName = Lorem.Words(10),
+                Text = Lorem.Sentence(100),
+                BlogId = blog.BlogId,
+            };
 
             var post = await _postRepository.AddAsync(newPost);
 
