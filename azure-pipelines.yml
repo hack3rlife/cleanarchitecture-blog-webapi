@@ -14,8 +14,8 @@ variables:
   major: 1
   minor: 0
   build: $(Build.BuildID)
-  revision: $(Rev:.r)
-  buildVersion: $(major).$(minor).$(build).$(Rev:.r)
+  revision: $(DayOfYear)
+  buildVersion: $(major).$(minor).$(build).$(revision)
 
 steps:
 - task: DotNetCoreCLI@2
