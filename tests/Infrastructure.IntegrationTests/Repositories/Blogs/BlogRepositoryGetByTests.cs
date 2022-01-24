@@ -1,11 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using BlogWebApi.Application.Interfaces;
+﻿using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
-using Infrastructure.IntegrationTests.Builders;
+using LoremNET;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Infrastructure.IntegrationTests.Repositories.Blog
+namespace Infrastructure.IntegrationTests.Repositories.Blogs
 {
     [Collection("DatabaseCollectionFixture")]
     public class BlogRepositoryGetByTests
@@ -29,9 +30,11 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
             // Arrange
             var guid = Guid.NewGuid();
 
-            var blog = BlogBuilder.Create()
-                .WithId(guid)
-                .Build();
+            var blog = new Blog
+            {
+                BlogName = Lorem.Words(10, true),
+                BlogId = guid
+            };
 
             await _blogRepository.AddAsync(blog);
 
@@ -60,23 +63,28 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
         public async Task BlogRepository_GetPostsByBlogId_Success()
         {
             //Arrange
-            BlogWebApi.Domain.Blog expectedBlog = new BlogWebApi.Domain.Blog();
+            Blog expectedBlog = new Blog();
 
             for (int i = 0; i < 10; i++)
             {
-                var newBlog = BlogBuilder.Default();
+                var newBlog = new Blog
+                {
+                    BlogName = Lorem.Words(10, true),
+                    BlogId = Guid.NewGuid()
+                };
 
                 expectedBlog = await _blogRepository.AddAsync(newBlog);
 
                 for (var j = 0; j < 20; j++)
                 {
 
-                    var newPost = PostBuilder.Create()
-                        .WithPostId(Guid.NewGuid())
-                        .WithName(LoremNET.Lorem.Words(10))
-                        .WithText(LoremNET.Lorem.Sentence(100))
-                        .WithBlogId(expectedBlog.BlogId)
-                        .Build();
+                    var newPost = new Post
+                    {
+                        PostId = Guid.NewGuid(),
+                        PostName = Lorem.Words(10),
+                        Text = Lorem.Sentence(100),
+                        BlogId = expectedBlog.BlogId,
+                    };
                     _ = await _postRepository.AddAsync(newPost);
                 }
             }
@@ -94,23 +102,28 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
         public async Task BlogRepository_GetPostsByBlogIdWithPaging_ReturnsPaginatedResults()
         {
             //Arrange
-            var newBlog = BlogBuilder.Default();
+            var newBlog = new Blog
+            {
+                BlogName = Lorem.Words(10, true),
+                BlogId = Guid.NewGuid()
+            };
             var expectedBlog = await _blogRepository.AddAsync(newBlog);
 
             for (var i = 0; i < 10; i++)
             {
 
-                var newPost = PostBuilder.Create()
-                    .WithPostId(Guid.NewGuid())
-                    .WithName(LoremNET.Lorem.Words(10))
-                    .WithText(LoremNET.Lorem.Sentence(100))
-                    .WithBlogId(expectedBlog.BlogId)
-                    .Build();
+                var newPost = new Post
+                {
+                    PostId = Guid.NewGuid(),
+                    PostName = Lorem.Words(10),
+                    Text = Lorem.Sentence(100),
+                    BlogId =expectedBlog.BlogId,
+                };
                 _ = await _postRepository.AddAsync(newPost);
             }
 
             //Act
-            var blog = await _blogRepository.GetByIdWithPostsAsync(expectedBlog.BlogId, 0,5);
+            var blog = await _blogRepository.GetByIdWithPostsAsync(expectedBlog.BlogId, 0, 5);
 
             //Assert
             Assert.NotNull(blog);

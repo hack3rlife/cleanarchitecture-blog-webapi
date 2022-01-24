@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
-using Infrastructure.IntegrationTests.Builders;
+using LoremNET;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Infrastructure.IntegrationTests.Repositories.Blog
+namespace Infrastructure.IntegrationTests.Repositories.Blogs
 {
     [Collection("DatabaseCollectionFixture")]
     public class BlogRepositoryDeleteTests
@@ -21,7 +23,11 @@ namespace Infrastructure.IntegrationTests.Repositories.Blog
         public async Task BlogRepository_DeleteAsync_Success()
         {
             //Arrange
-            var newBlog = BlogBuilder.Default();
+            var newBlog = new Blog
+            {
+                BlogName = Lorem.Words(10, true),
+                BlogId = Guid.NewGuid()
+            };
 
             var blog = await _blogRepository.AddAsync(newBlog);
 
