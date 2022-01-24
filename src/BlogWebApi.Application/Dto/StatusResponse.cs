@@ -9,6 +9,6 @@ namespace BlogWebApi.Application.Dto
         public string OsVersion { get; set; }
         public string AssemblyVersion { get; set; }
         public int ProcessorCount { get; set; }
-        public int ElapsedTime { get; set; }
+        public string ElapsedTime { get; set; }
     }
 }

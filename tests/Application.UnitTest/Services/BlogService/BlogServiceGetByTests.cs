@@ -1,20 +1,29 @@
-using Application.UnitTest.Builders;
+using BlogWebApi.Application.Exceptions;
+using BlogWebApi.Domain;
+using LoremNET;
 using Moq;
 using System;
 using System.Threading.Tasks;
-using BlogWebApi.Application.Exceptions;
 using Xunit;
 
 namespace Application.UnitTest.Services.BlogService
 {
     public class BlogServiceGetByTests : BlogServiceBase
     {
+        private readonly Blog expectedBlog;
+
+        public BlogServiceGetByTests()
+        {
+            expectedBlog = new Blog
+            {
+                BlogName = Lorem.Words(10),
+                BlogId = Guid.NewGuid()
+            };
+        }
         [Fact(DisplayName = "GetBy_BlogId_IsCalledOnce")]
         public async Task GetBy_BlogId_IsCalledOnce()
         {
             //Arrange
-            var expectedBlog = BlogBuilder.Default();
-
             await MockBlogRepository.MockSetupGetByIdAsync(expectedBlog);
 
             //Act
@@ -61,8 +70,6 @@ namespace Application.UnitTest.Services.BlogService
         public async Task GetBy_BlogIdWithPostsNoPagingValues_UsesDefaultValueForSkipAndTake()
         {
             //Arrange
-            var expectedBlog = BlogBuilder.Default();
-
             await MockBlogRepository.MockSetupGetByIdWithPostsAsync(expectedBlog.BlogId, expectedBlog);
 
             //Act
@@ -79,8 +86,6 @@ namespace Application.UnitTest.Services.BlogService
         public async Task GetBy_BlogIdWithPostsUsingInvalidSkipValue_UsesDefaultValueForSkip()
         {
             //Arrange
-            var expectedBlog = BlogBuilder.Default();
-
             await MockBlogRepository.MockSetupGetByIdWithPostsAsync(expectedBlog.BlogId, expectedBlog);
 
             //Act
@@ -97,7 +102,6 @@ namespace Application.UnitTest.Services.BlogService
         public async Task GetBy_BlogIdWithPostsUsingInvalidTakeValue_UsesDefaultValueForTake()
         {
             //Arrange
-            var expectedBlog = BlogBuilder.Default();
             await MockBlogRepository.MockSetupGetByIdWithPostsAsync(expectedBlog.BlogId, expectedBlog);
 
             //Act
@@ -117,8 +121,6 @@ namespace Application.UnitTest.Services.BlogService
         public async Task GetBy_BlogIdWithPosts_IsCalledOnce(int skip, int take)
         {
             //Arrange
-            var expectedBlog = BlogBuilder.Default();
-
             await MockBlogRepository.MockSetupGetByIdWithPostsAsync(expectedBlog.BlogId, expectedBlog);
 
             //Act

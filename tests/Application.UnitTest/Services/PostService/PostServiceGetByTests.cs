@@ -1,29 +1,42 @@
-﻿using Application.UnitTest.Builders;
-using BlogWebApi.Application.Dto;
+﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
+using BlogWebApi.Domain;
+using LoremNET;
 using Moq;
 using System;
 using System.Threading.Tasks;
-using BlogWebApi.Application.Exceptions;
 using Xunit;
 
 namespace Application.UnitTest.Services.PostService
 {
     public class PostServiceGetByTests : PostServiceBase
     {
+        private readonly Post returnPost;
+
+        public PostServiceGetByTests()
+        {
+            returnPost = new Post
+            {
+                PostId = Guid.NewGuid(),
+                PostName = Lorem.Words(10),
+                Text = Lorem.Sentence(10),
+                BlogId = Guid.NewGuid()
+            };
+        }
+
         [Fact(DisplayName = "GetBy_PostId_IsCalledOnce")]
         public async Task GetBy_PostId_IsCalledOnce()
         {
             //Arrange
-            var thePost = PostBuilder.Default();
-            await MockPostRepository.MockSetupGetByIdAsync(thePost);
+            await MockPostRepository.MockSetupGetByIdAsync(returnPost);
 
             //Act
-            var postById = await PostService.GetBy(thePost.PostId);
+            var postById = await PostService.GetBy(returnPost.PostId);
 
             //Assert
             Assert.True(postById.GetType() == typeof(PostDetailsResponseDto));
 
-            MockPostRepository.MockVerifyGetByIdAsync(thePost, Times.Once());
+            MockPostRepository.MockVerifyGetByIdAsync(returnPost, Times.Once());
         }
 
         [Fact(DisplayName = "GetBy_PostId_ThrowsBadRequestException")]
@@ -43,8 +56,6 @@ namespace Application.UnitTest.Services.PostService
         public async Task GetBy_PostIdIncludingCommentsNoPagingValues_UsesDefaultValuesForSkipAndTake()
         {
             //Arrange
-            var returnPost = PostBuilder.Default();
-
             await MockPostRepository.MockSetupGetByIdWithCommentsTask(returnPost, Skip, Take);
 
             //Act
@@ -60,8 +71,6 @@ namespace Application.UnitTest.Services.PostService
         public async Task GetBy_PostIdIncludingCommentsWithInvalidSkipValue_UsesDefaultValuesForSkip()
         {
             //Arrange
-            var returnPost = PostBuilder.Default();
-
             await MockPostRepository.MockSetupGetByIdWithCommentsTask(returnPost, Skip, 5);
 
             //Act
@@ -78,8 +87,6 @@ namespace Application.UnitTest.Services.PostService
         {
             //Arrange
             var take = 0;
-
-            var returnPost = PostBuilder.Default();
 
             await MockPostRepository.MockSetupGetByIdWithCommentsTask(returnPost, Skip, Take);
 
@@ -99,7 +106,6 @@ namespace Application.UnitTest.Services.PostService
         public async Task GetBy_PostIdIncludingComments_IsCalledOnce(int skip, int take)
         {
             //Arrange
-            var returnPost = PostBuilder.Default();
             await MockPostRepository.MockSetupGetByIdWithCommentsTask(returnPost, skip, take);
 
             //Act

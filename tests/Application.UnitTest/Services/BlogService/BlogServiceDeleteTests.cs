@@ -1,5 +1,6 @@
-using Application.UnitTest.Builders;
 using BlogWebApi.Application.Exceptions;
+using BlogWebApi.Domain;
+using LoremNET;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -13,7 +14,13 @@ namespace Application.UnitTest.Services.BlogService
         public async Task Delete_ExistingBlog_IsCalledOnce()
         {
             // Arrange
-            await MockBlogRepository.MockSetupGetByIdAsync(BlogBuilder.Default());
+            var blog = new Blog
+            {
+                BlogName = Lorem.Words(10),
+                BlogId = Guid.NewGuid()
+            };
+
+            await MockBlogRepository.MockSetupGetByIdAsync(blog);
 
             MockBlogRepository.MockSetupDeleteAsync();
 

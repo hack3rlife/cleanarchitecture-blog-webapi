@@ -1,11 +1,10 @@
-﻿using Application.UnitTest.Builders;
-using BlogWebApi.Application.Dto;
+﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Exceptions;
+using BlogWebApi.Domain;
 using LoremNET;
 using Moq;
 using System;
 using System.Threading.Tasks;
-using BlogWebApi.Application.Exceptions;
-using BlogWebApi.Domain;
 using Xunit;
 
 namespace Application.UnitTest.Services.PostService
@@ -53,7 +52,13 @@ namespace Application.UnitTest.Services.PostService
         public async Task Update_NonExistentPost_IsCalledOnce()
         {
             //Arrange
-            var updatePost = PostBuilder.Default();
+            var updatePost = new Post
+            {
+                PostId = Guid.NewGuid(),
+                PostName = Lorem.Words(10),
+                Text = Lorem.Sentence(10),
+                BlogId = Guid.NewGuid()
+            };
 
             var updateDto = new PostUpdateRequestDto
             {
