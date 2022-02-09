@@ -15,6 +15,6 @@ namespace BlogWebApi.Domain
         public string Text { get; set; }
         public Guid BlogId { get; set; }
 
-        public ICollection<Comment> Comment { get; }
+        public ICollection<Comment> Comment { get; set; }
     }
 }

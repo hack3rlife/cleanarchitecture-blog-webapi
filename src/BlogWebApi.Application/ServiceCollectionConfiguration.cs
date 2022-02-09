@@ -1,5 +1,7 @@
 ﻿using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Application.Services;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -20,6 +22,11 @@ namespace BlogWebApi.Application
             services.AddScoped<ICommentService, CommentService>();
 
             return services;
+        }
+
+        public static void ConfigureApplicationServices(this IApplicationBuilder app, IWebHostEnvironment env)
+        {
+
         }
     }
 }

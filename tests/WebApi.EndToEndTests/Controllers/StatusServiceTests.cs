@@ -1,4 +1,5 @@
-﻿using BlogWebApi.Application.Interfaces;
+﻿using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Domain;
 using BlogWebApi.WebApi;
 using FluentAssertions;
@@ -23,7 +24,7 @@ namespace WebApi.EndToEndTests.Controllers
 
         }
 
-        [Fact(Skip = "Check_ServiceStatus_Success")]
+        [Fact(DisplayName = "Check_ServiceStatus_Success")]
         public async Task Check_ServiceStatus_Success()
         {
             // Arrange
@@ -33,10 +34,10 @@ namespace WebApi.EndToEndTests.Controllers
             var responseMessage = await _client.GetAsync(path);
             var content = await responseMessage.Content.ReadAsStringAsync();
 
-            var status = JsonConvert.DeserializeObject<Status>(content);
+            var status = JsonConvert.DeserializeObject<StatusResponse>(content);
 
             // Assert
-            status.Should().BeOfType<Status>();
+            status.Should().BeOfType<StatusResponse>();
             responseMessage.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }

@@ -25,7 +25,6 @@ namespace BlogWebApi.Application.Services
             var blogs = await _blogRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
 
             return _mapper.Map<IEnumerable<BlogDetailsResponseDto>>(blogs);
-            
         }
 
         public Task<BlogResponseDto> GetBy(Guid blogId)

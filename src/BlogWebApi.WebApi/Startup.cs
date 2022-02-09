@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
@@ -102,7 +103,8 @@ namespace BlogWebApi.WebApi
                     }
                     catch (Exception exception)
                     {
-                        Console.WriteLine(exception);
+                        var logger = services.GetRequiredService<ILogger<Startup>>();
+                        logger.LogError(exception, "An error occurred while seeding BlogDbContextDataSeed.");
                     }
                 }
                 app.UseDeveloperExceptionPage();
@@ -116,6 +118,9 @@ namespace BlogWebApi.WebApi
             {
                 endpoints.MapControllers();
             });
+
+            app.ConfigureApplicationServices(env);
+            app.ConfigureInfrastructureServices(env);
         }
     }
 }

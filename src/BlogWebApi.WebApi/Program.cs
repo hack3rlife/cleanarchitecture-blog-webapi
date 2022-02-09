@@ -14,23 +14,6 @@ namespace BlogWebApi.WebApi
         {
             var host = CreateHostBuilder(args).Build();
 
-            using (var scope = host.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var statusService = services.GetRequiredService<IStatusService>();
-
-                    await statusService.SetStatusAsync();
-
-                }
-                catch (Exception exception)
-                {
-                    var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(exception, "An error occurred while seeding status.");
-                }
-            }
-
             await host.RunAsync();
         }
 

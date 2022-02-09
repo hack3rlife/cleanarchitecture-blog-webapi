@@ -31,11 +31,5 @@ namespace Application.UnitTest.Mappers
             Assert.Equal(blogAddRequestDto.BlogId, blog.BlogId);
             Assert.Equal(blogAddRequestDto.CreatedBy, blog.CreatedBy);
         }
-
-       
-
-      
-
-       
     }
 }
