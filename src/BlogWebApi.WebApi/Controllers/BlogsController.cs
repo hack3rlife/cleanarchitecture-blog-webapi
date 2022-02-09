@@ -62,6 +62,7 @@ namespace BlogWebApi.WebApi.Controllers
             {
                 return NotFound(guid);
             }
+
             return Ok(blog);
         }
 
@@ -84,6 +85,7 @@ namespace BlogWebApi.WebApi.Controllers
             {
                 return BadRequest(blogAddRequestDto);
             }
+
             return CreatedAtAction(nameof(Add), newBlog);
         }
 

@@ -58,7 +58,7 @@ namespace WebApi.EndToEndTests.Controllers.Posts
             responseMessage.StatusCode.Should().Be(HttpStatusCode.Created);
         }
 
-        [Fact(Skip = "AddPost_WithEmptyBlogId_ThrowsAnError")]
+        [Fact(DisplayName = "AddPost_WithEmptyBlogId_ThrowsAnError")]
         public async Task AddPost_WithEmptyBlogId_ThrowsAnError()
         {
             // Arrange
@@ -84,7 +84,7 @@ namespace WebApi.EndToEndTests.Controllers.Posts
 
         }
 
-        [Fact(DisplayName = "AddPost_WithEmptyName_ThrowsAnError", Skip = "To do")]
+        [Fact(DisplayName = "AddPost_WithEmptyName_ThrowsAnError")]
         public async Task AddPost_WithEmptyName_ThrowsAnError()
         {
             // Arrange

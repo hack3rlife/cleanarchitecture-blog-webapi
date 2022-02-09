@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BlogWebApi.Domain
 {
@@ -11,6 +10,6 @@ namespace BlogWebApi.Domain
         public string OsVersion { get; set; }
         public string AssemblyVersion { get; set; }
         public int ProcessorCount { get; set; }
-        public int ElapsedTime { get; set; }
+        //public int ElapsedTime { get; set; }
     }
 }

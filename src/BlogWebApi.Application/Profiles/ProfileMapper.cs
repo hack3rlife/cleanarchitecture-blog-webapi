@@ -23,7 +23,7 @@ namespace BlogWebApi.Application.Profiles
             CreateMap<Post, PostResponseDto>();
             CreateMap<Comment, CommentDetailsResponseDto>();
             CreateMap<Comment, CommentResponseDto>();
-
+            CreateMap<Status, StatusResponse>();
         }
     }
 }

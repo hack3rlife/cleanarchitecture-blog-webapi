@@ -48,7 +48,7 @@ namespace WebApi.EndToEndTests.Controllers.Blogs
             responseMessage.StatusCode.Should().Be(HttpStatusCode.NoContent);
         }
 
-        [Fact(DisplayName = "Delete_BlogWhichDoesNotExist_ManagesNotFoundException", Skip = "Feature not developed yet")]
+        [Fact(DisplayName = "Delete_BlogWhichDoesNotExist_ManagesNotFoundException")]
         public async Task Delete_BlogWhichDoesNotExist_ManagesNotFoundException()
         {
             // Arrange

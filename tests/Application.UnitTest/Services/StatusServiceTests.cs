@@ -1,11 +1,12 @@
-﻿using System;
+﻿using AutoMapper;
 using BlogWebApi.Application.Interfaces;
-using Moq;
-using System.Threading.Tasks;
-using BlogWebApi.Application.Dto;
+using BlogWebApi.Application.Profiles;
 using BlogWebApi.Application.Services;
 using BlogWebApi.Domain;
 using BlogWebApi.Domain.Interfaces;
+using Moq;
+using System;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Application.UnitTest.Services
@@ -17,8 +18,12 @@ namespace Application.UnitTest.Services
 
         public StatusServiceTests()
         {
+            var configurationProvider = new MapperConfiguration(cfg => { cfg.AddProfile<ProfileMapper>(); });
+
+            var mapper = configurationProvider.CreateMapper();
+
             _mockStatusRepository = new Mock<IStatusRepository>();
-            _statusService = new StatusService(_mockStatusRepository.Object);
+            _statusService = new StatusService(_mockStatusRepository.Object, mapper);
         }
 
         [Fact]
@@ -31,8 +36,7 @@ namespace Application.UnitTest.Services
                 OsVersion = "OsVersion",
                 Server = "TheServerName",
                 Started = DateTime.UtcNow.ToString("s"),
-                ProcessorCount = 1,
-                ElapsedTime = 1
+                ProcessorCount = 1
             };
 
             _mockStatusRepository

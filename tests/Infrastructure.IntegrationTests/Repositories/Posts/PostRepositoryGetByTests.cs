@@ -53,7 +53,7 @@ namespace Infrastructure.IntegrationTests.Repositories.Posts
             Assert.Equal(post.PostId, getByPost.PostId);
         }
 
-        [Fact(Skip = "PostRepository_GetCommentsByPostId_Success")]
+        [Fact(DisplayName = "PostRepository_GetCommentsByPostId_Success")]
         public async Task PostRepository_GetCommentsByPostId_Success()
         {
             //Arrange
@@ -93,10 +93,10 @@ namespace Infrastructure.IntegrationTests.Repositories.Posts
             //Assert
             Assert.NotNull(getByPost);
             Assert.Equal(post.PostId, getByPost.PostId);
-            Assert.True(post.Comment.Count == 10);
+            Assert.True(getByPost.Comment.Count == 10);
         }
 
-        [Fact(Skip = "PostRepository_GetCommentsByPostIdWWithPaging_ReturnsPaginatedResults")]
+        [Fact(DisplayName = "PostRepository_GetCommentsByPostIdWWithPaging_ReturnsPaginatedResults")]
         public async Task PostRepository_GetCommentsByPostIdWWithPaging_ReturnsPaginatedResults()
         {
             //Arrange
@@ -136,7 +136,7 @@ namespace Infrastructure.IntegrationTests.Repositories.Posts
             //Assert
             Assert.NotNull(getByPost);
             Assert.Equal(post.PostId, getByPost.PostId);
-            Assert.True(post.Comment.Count == 6);
+            Assert.True(getByPost.Comment.Count == 6);
         }
     }
 }
