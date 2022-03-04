@@ -13,7 +13,7 @@ namespace BlogWebApi.Application.Interfaces
         /// <param name="skip"></param>
         /// <param name="take"></param>
         /// <returns></returns>
-        Task<IEnumerable<BlogDetailsResponseDto>> GetAll(int skip, int take);
+        Task<IEnumerable<BlogResponseDto>> GetAll(int skip, int take);
 
         /// <summary>
         /// Get a single blog with no posts details
@@ -36,7 +36,7 @@ namespace BlogWebApi.Application.Interfaces
         /// </summary>
         /// <param name="blog"></param>
         /// <returns></returns>
-        Task<BlogDetailsResponseDto> Add(BlogAddRequestDto blog);
+        Task<BlogResponseDto> Add(BlogAddRequestDto blog);
 
         /// <summary>
         /// Update a existing blog in the data source

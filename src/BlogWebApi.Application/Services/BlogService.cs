@@ -20,11 +20,11 @@ namespace BlogWebApi.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BlogDetailsResponseDto>> GetAll(int skip = 0, int take = 10)
+        public async Task<IEnumerable<BlogResponseDto>> GetAll(int skip = 0, int take = 10)
         {
             var blogs = await _blogRepository.ListAllAsync(skip < 0 ? 0 : skip, take <= 0 ? 10 : take);
 
-            return _mapper.Map<IEnumerable<BlogDetailsResponseDto>>(blogs);
+            return _mapper.Map<IEnumerable<BlogResponseDto>>(blogs);
         }
 
         public Task<BlogResponseDto> GetBy(Guid blogId)
@@ -57,7 +57,7 @@ namespace BlogWebApi.Application.Services
             return _mapper.Map<BlogDetailsResponseDto>(blog);
         }
 
-        public Task<BlogDetailsResponseDto> Add(BlogAddRequestDto blogAddRequestDto)
+        public Task<BlogResponseDto> Add(BlogAddRequestDto blogAddRequestDto)
         {
             if (blogAddRequestDto == null)
                 throw new BadRequestException("Blog information cannot be null.");
@@ -76,11 +76,11 @@ namespace BlogWebApi.Application.Services
             return AddInternal(blog);
         }
 
-        public async Task<BlogDetailsResponseDto> AddInternal(Blog blog)
+        public async Task<BlogResponseDto> AddInternal(Blog blog)
         {
             var newPost = await _blogRepository.AddAsync(blog);
 
-            return _mapper.Map<BlogDetailsResponseDto>(newPost);
+            return _mapper.Map<BlogResponseDto>(newPost);
         }
 
         public Task Update(BlogUpdateRequestDto blog)

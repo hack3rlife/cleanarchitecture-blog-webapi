@@ -37,7 +37,7 @@ namespace BlogWebApi.WebApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IAsyncEnumerable<BlogDetailsResponseDto>>> Get([FromQuery]int skip, int take)
+        public async Task<ActionResult<IAsyncEnumerable<BlogResponseDto>>> Get([FromQuery]int skip, int take)
         {
             return Ok(await _blogService.GetAll(skip, take));
         }
