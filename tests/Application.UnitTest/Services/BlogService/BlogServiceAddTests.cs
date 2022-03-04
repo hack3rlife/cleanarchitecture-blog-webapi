@@ -40,7 +40,6 @@ namespace Application.UnitTest.Services.BlogService
 
             Assert.Equal(newDto.BlogId, blog.BlogId);
             Assert.Equal(newDto.BlogName, blog.BlogName);
-            Assert.Equal(newDto.CreatedBy, blog.CreatedBy);
 
             MockBlogRepository.MockVerifyAddAsync(Times.Once());
         }
