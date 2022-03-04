@@ -77,7 +77,7 @@ namespace BlogWebApi.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BlogDetailsResponseDto>> Add([FromBody] BlogAddRequestDto blogAddRequestDto)
+        public async Task<ActionResult<BlogResponseDto>> Add([FromBody] BlogAddRequestDto blogAddRequestDto)
         {
             var newBlog = await _blogService.Add(blogAddRequestDto);
 
