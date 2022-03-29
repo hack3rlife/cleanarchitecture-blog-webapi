@@ -1,5 +1,4 @@
-﻿using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
 using LoremNET;
 using System;
@@ -12,7 +11,7 @@ namespace Infrastructure.IntegrationTests.Repositories.Blogs
     public class BlogRepositoryGetByTests
     {
         private readonly BlogRepository _blogRepository;
-        private readonly IPostRepository _postRepository;
+        private readonly PostRepository _postRepository;
 
         private readonly DatabaseFixture _fixture;
 

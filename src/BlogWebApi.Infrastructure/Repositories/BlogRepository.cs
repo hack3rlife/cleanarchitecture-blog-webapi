@@ -1,9 +1,9 @@
-﻿using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Domain;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using BlogWebApi.Domain.Interfaces;
 
 namespace BlogWebApi.Infrastructure.Repositories
 {

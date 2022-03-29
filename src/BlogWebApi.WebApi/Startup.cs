@@ -120,7 +120,7 @@ namespace BlogWebApi.WebApi
             });
 
             app.ConfigureApplicationServices(env);
-            app.ConfigureInfrastructureServices(env);
+            //app.ConfigureInfrastructureServices(env);
         }
     }
 }

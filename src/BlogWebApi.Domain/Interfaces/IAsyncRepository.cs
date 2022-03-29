@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BlogWebApi.Application.Interfaces
+namespace BlogWebApi.Domain.Interfaces
 {
     public interface IAsyncRepository<T> where T : class
     {

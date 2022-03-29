@@ -1,5 +1,4 @@
-﻿using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
 using LoremNET;
 using System;
@@ -12,9 +11,9 @@ namespace Infrastructure.IntegrationTests.Repositories.Comments
    public class CommentsRepositoryDeleteTests
     {
         private readonly DatabaseFixture _fixture;
-        private readonly IBlogRepository _blogRepository;
-        private readonly IPostRepository _postRepository;
-        private readonly ICommentRepository _commentRepository;
+        private readonly BlogRepository _blogRepository;
+        private readonly PostRepository _postRepository;
+        private readonly CommentRepository _commentRepository;
 
         public CommentsRepositoryDeleteTests(DatabaseFixture fixture)
         {

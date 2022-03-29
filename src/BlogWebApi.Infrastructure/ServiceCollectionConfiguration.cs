@@ -1,13 +1,8 @@
-﻿using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain.Interfaces;
+﻿using BlogWebApi.Domain.Interfaces;
 using BlogWebApi.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using System;
 
 namespace BlogWebApi.Infrastructure
 {
@@ -44,24 +39,9 @@ namespace BlogWebApi.Infrastructure
             return services;
         }
 
-        public static void ConfigureInfrastructureServices(this IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            using (var scope = app.ApplicationServices.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                try
-                {
-                    var statusService = services.GetRequiredService<IStatusService>();
+        //public static void ConfigureInfrastructureServices(this IApplicationBuilder app, IWebHostEnvironment env)
+        //{
 
-                    statusService.SetStatusAsync();
-
-                }
-                catch (Exception exception)
-                {
-                    var logger = services.GetRequiredService<ILogger<IStatusService>>();
-                    logger.LogError(exception, "An error occurred while seeding status.");
-                }
-            }
-        }
+        //}
     }
 }
