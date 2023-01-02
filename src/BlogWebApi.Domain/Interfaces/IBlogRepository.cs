@@ -1,8 +1,7 @@
-﻿using BlogWebApi.Domain;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
-namespace BlogWebApi.Application.Interfaces
+namespace BlogWebApi.Domain.Interfaces
 {
     public interface IBlogRepository : IAsyncRepository<Blog>
     {

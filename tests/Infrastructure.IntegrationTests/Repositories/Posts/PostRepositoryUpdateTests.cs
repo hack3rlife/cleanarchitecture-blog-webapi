@@ -1,5 +1,4 @@
-﻿using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Domain;
 using BlogWebApi.Infrastructure.Repositories;
 using LoremNET;
 using System;
@@ -11,7 +10,7 @@ namespace Infrastructure.IntegrationTests.Repositories.Posts
     [Collection("DatabaseCollectionFixture")]
     public class PostRepositoryUpdateTests
     {
-        private readonly IPostRepository _postRepository;
+        private readonly PostRepository _postRepository;
         private readonly BlogRepository _blogRepository;
         private readonly DatabaseFixture _fixture;
 

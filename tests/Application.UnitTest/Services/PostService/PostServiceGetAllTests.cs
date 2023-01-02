@@ -9,9 +9,7 @@ namespace Application.UnitTest.Services.PostService
 {
     public class PostServiceGetAllTests : PostServiceBase
     {
-        public const int Skip = 0; //default pagination value
-        public const int Take = 10; //default pagination value
-
+      
         [Fact(DisplayName = "GetAll_PostsWithoutPaginationValues_UsesDefaultValueForSkipAndTake")]
         public async Task GetAll_PostsWithoutPaginationValues_UsesDefaultValueForSkipAndTake()
         {

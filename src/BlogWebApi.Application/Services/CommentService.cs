@@ -3,6 +3,7 @@ using BlogWebApi.Application.Dto;
 using BlogWebApi.Application.Exceptions;
 using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Domain;
+using BlogWebApi.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

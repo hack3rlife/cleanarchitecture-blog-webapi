@@ -155,7 +155,6 @@ namespace Application.UnitTest.Services.PostService
 
         [Theory(DisplayName = "Add_PostWithEmptyOrNullBlogId_ThrowsBadRequestException")]
         [InlineData("00000000-0000-0000-0000-000000000000")]
-        [InlineData(null)]
         public async Task Add_PostWithEmptyOrNullBlogId_ThrowsBadRequestException(Guid guid)
         {
             //Arrange

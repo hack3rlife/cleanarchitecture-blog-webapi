@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using BlogWebApi.Application.Interfaces;
+using BlogWebApi.Domain.Interfaces;
 using BlogWebApi.Domain;
 using Microsoft.EntityFrameworkCore;
 
