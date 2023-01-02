@@ -18,13 +18,13 @@ namespace BlogWebApi.Infrastructure
 
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<BlogDbContext>( options =>
-                {
-                    options.UseInMemoryDatabase(databaseName: "inmemblogdb");
-                    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-                    options.EnableSensitiveDataLogging();
-                    options.EnableDetailedErrors();
-                }, ServiceLifetime.Scoped, ServiceLifetime.Scoped);
+                services.AddDbContext<BlogDbContext>(options =>
+               {
+                   options.UseInMemoryDatabase(databaseName: "inmemblogdb");
+                   options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                   options.EnableSensitiveDataLogging();
+                   options.EnableDetailedErrors();
+               }, ServiceLifetime.Scoped, ServiceLifetime.Scoped);
             }
             else
             {
@@ -39,9 +39,9 @@ namespace BlogWebApi.Infrastructure
             return services;
         }
 
-        //public static void ConfigureInfrastructureServices(this IApplicationBuilder app, IWebHostEnvironment env)
+        // TODO: Fix this for future use
+        //public static void ConfigureApplicationServices(this IApplicationBuilder app, IWebHostEnvironment env)
         //{
-
         //}
     }
 }
