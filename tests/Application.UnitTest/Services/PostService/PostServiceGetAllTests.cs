@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BlogWebApi.Application.Dto;
 using BlogWebApi.Domain;
@@ -9,7 +9,6 @@ namespace Application.UnitTest.Services.PostService
 {
     public class PostServiceGetAllTests : PostServiceBase
     {
-      
         [Fact(DisplayName = "GetAll_PostsWithoutPaginationValues_UsesDefaultValueForSkipAndTake")]
         public async Task GetAll_PostsWithoutPaginationValues_UsesDefaultValueForSkipAndTake()
         {
