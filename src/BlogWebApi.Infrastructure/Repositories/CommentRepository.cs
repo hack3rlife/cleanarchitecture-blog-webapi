@@ -1,5 +1,5 @@
-﻿using BlogWebApi.Application.Interfaces;
-using BlogWebApi.Domain;
+﻿using BlogWebApi.Domain;
+using BlogWebApi.Domain.Interfaces;
 
 namespace BlogWebApi.Infrastructure.Repositories
 {
