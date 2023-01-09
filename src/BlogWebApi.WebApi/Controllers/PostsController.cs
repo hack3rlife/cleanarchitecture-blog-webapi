@@ -6,6 +6,7 @@ using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NewRelic.Api.Agent;
 
 namespace BlogWebApi.WebApi.Controllers
 {
@@ -38,6 +39,7 @@ namespace BlogWebApi.WebApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Trace]
         public async Task<ActionResult<IAsyncEnumerable<PostResponseDto>>> Get([FromQuery] int skip, int take)
         {
             return Ok(await _postService.GetAll(skip, take));
@@ -57,6 +59,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<ActionResult<PostDetailsResponseDto>> Get(Guid postId)
         {
             var blog = await _postService.GetBy(postId);
@@ -84,6 +87,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<ActionResult<Post>> Get(Guid postId, [FromQuery] int skip, int take)
         {
             var blog = await _postService.GetCommentsBy(postId, skip, take);
@@ -107,6 +111,7 @@ namespace BlogWebApi.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Trace]
         public async Task<ActionResult<PostResponseDto>> Post([FromBody] PostAddRequestDto post)
         {
             var newPost = await _postService.Add(post);
@@ -133,6 +138,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<IActionResult> Put([FromBody] PostUpdateRequestDto post)
         {
             await _postService.Update(post);
@@ -152,6 +158,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<IActionResult> Delete(Guid postId)
         {
             await _postService.Delete(postId);

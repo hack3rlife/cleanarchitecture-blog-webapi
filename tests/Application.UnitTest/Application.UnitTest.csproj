@@ -20,10 +20,14 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="NewRelic.Agent.Api" Version="10.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\BlogWebApi.Application\BlogWebApi.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="NewRelic.Agent.Api" />
+  </ItemGroup>
 </Project>
