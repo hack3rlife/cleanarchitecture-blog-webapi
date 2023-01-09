@@ -14,6 +14,7 @@ Clean Architecture Pattern with .NET Core Web API. BlogWebApi specs can be found
 The solution is organized in the following way
 
     - BlogWebApi.WebApi.sln
+        | - azure-pipelinezz.yml
 
         | - README.md
 
@@ -26,6 +27,7 @@ The solution is organized in the following way
             | - BlogWebApi.Infrastructure
 
             |- BlogWebApi.WebApi
+                | - Dockerfile
 
         | - tests
 
@@ -34,6 +36,8 @@ The solution is organized in the following way
             | - Infrastructure.IntegrationTests
 
             | - WebApi.EndToEndTests
+        | -docker-compose
+            | - docker-compose.yml
 
 ## Domain Project
 This project will include Domain Models, Interfaces that will be implemented by the outside layers, enums, etc., specific to the domain logic.  This project should not have any dependecy to another project since it is the core of the project.
@@ -75,34 +79,49 @@ This is the entry point of our application and it depends on the Application and
 ## .NET CLI
 1. From the root directory, execute the following commands
 ```
-cd src\BlogWebApi.WebApi
+    cd src\BlogWebApi.WebApi
 ```
 1. Build the project
 ```
-dotnet build BlogWebApi.WebApi.csproj
+    dotnet build BlogWebApi.WebApi.csproj
 ```
 1. Run the project
 ```
-dotnet run BlogWebApi.WebApi.csproj
+    dotnet run BlogWebApi.WebApi.csproj
 ```
 
+## Test
+### Unit Testing
+```
+    dotnet test tests/Application.UnitTest
+```
+
+### Integration Testing
+```
+    dotnet test tests/Infrastructure.IntegrationTests
+```
+
+### End to End Testing
+```
+    dotnet test tests/WebApi.EndToEndTests
+```
 
 ## Docker Compose
 1.From the root folder, execute the following command:
 ```
-docker-compose -f docker-compose.yml -f docker-compose.override.yml -p BlogWebApi up --build --remove-orphans --abort-on-container-exit
+    docker-compose -f docker-compose.yml -f docker-compose.override.yml -p BlogWebApi up --build --remove-orphans --abort-on-container-exit
 ```
 
 ### Certificate Installation
 
 #### Windows
 ```
-dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p P@ssW0rd!
-dotnet dev-certs https --trust
+    dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p P@ssW0rd!
+    dotnet dev-certs https --trust
 ```
 
 #### MacOS
 ```
-dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p P@ssW0rd!
-dotnet dev-certs https --trust
+    dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p P@ssW0rd!
+    dotnet dev-certs https --trust
 ```
