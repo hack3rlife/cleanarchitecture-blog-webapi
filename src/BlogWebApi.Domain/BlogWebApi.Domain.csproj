@@ -4,4 +4,10 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="NewRelic.Agent.Api" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NewRelic.Agent.Api" Version="10.4.0" />
+  </ItemGroup>
 </Project>

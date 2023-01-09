@@ -3,6 +3,7 @@ using BlogWebApi.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NewRelic.Api.Agent;
 using System.Threading.Tasks;
 
 namespace BlogWebApi.WebApi.Controllers
@@ -34,9 +35,11 @@ namespace BlogWebApi.WebApi.Controllers
         /// <returns>The service <see cref="StatusResponse"/></returns>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Trace]
         public async Task<ActionResult<StatusResponse>> Get()
         {
             _logger.LogInformation("Calling Get Status");
+            
 
             return Ok(await _statusService.GetStatusAsync());
         }

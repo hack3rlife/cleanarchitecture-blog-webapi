@@ -6,6 +6,7 @@ using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NewRelic.Api.Agent;
 
 namespace BlogWebApi.WebApi.Controllers
 {
@@ -37,6 +38,7 @@ namespace BlogWebApi.WebApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Trace]
         public async Task<ActionResult<IAsyncEnumerable<CommentResponseDto>>> Get([FromQuery] int skip, int take)
         {
             var comments = await _commentService.GetAll(skip, take);
@@ -56,6 +58,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Trace]
         public async Task<ActionResult<CommentDetailsResponseDto>> Get(Guid commentId)
         {
             var comment = await _commentService.GetBy(commentId);
@@ -77,6 +80,7 @@ namespace BlogWebApi.WebApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Trace]
         public async Task<ActionResult<CommentResponseDto>> Post([FromBody] CommentAddRequestDto comment)
         {
             var newComment = await _commentService.Add(comment);
@@ -98,6 +102,7 @@ namespace BlogWebApi.WebApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Trace]
         public async Task<IActionResult> Put([FromBody] CommentUpdateRequestDto comment)
         {
             await _commentService.Update(comment);
@@ -117,6 +122,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<IActionResult> Delete(Guid commentId)
         {
             await _commentService.Delete(commentId);

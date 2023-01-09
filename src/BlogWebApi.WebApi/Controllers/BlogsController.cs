@@ -6,6 +6,7 @@ using BlogWebApi.Application.Interfaces;
 using BlogWebApi.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NewRelic.Api.Agent;
 
 namespace BlogWebApi.WebApi.Controllers
 {
@@ -37,6 +38,7 @@ namespace BlogWebApi.WebApi.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Trace]
         public async Task<ActionResult<IAsyncEnumerable<BlogResponseDto>>> Get([FromQuery]int skip, int take)
         {
             return Ok(await _blogService.GetAll(skip, take));
@@ -54,6 +56,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<ActionResult<BlogResponseDto>> Get(Guid guid, [FromQuery] int skip = 0, int take = 10)
         {
             var blog = await _blogService.GetPostsBy(guid, skip, take);
@@ -77,6 +80,7 @@ namespace BlogWebApi.WebApi.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Trace]
         public async Task<ActionResult<BlogResponseDto>> Add([FromBody] BlogAddRequestDto blogAddRequestDto)
         {
             var newBlog = await _blogService.Add(blogAddRequestDto);
@@ -101,6 +105,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<IActionResult> Put([FromBody] BlogUpdateRequestDto blogUpdateRequestDto)
         {
             await _blogService.Update(blogUpdateRequestDto);
@@ -119,6 +124,7 @@ namespace BlogWebApi.WebApi.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Trace]
         public async Task<IActionResult> Delete(Guid guid)
         {
             await _blogService.Delete(guid);
